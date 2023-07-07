@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "悟空",
+    "slug": "wukong",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.wengqianshan.wukong",
+      "buildNumber": "16"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/foreground.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.wengqianshan.wukong",
+      "versionCode": 1
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "scheme": "wukongim",
+    "plugins": [
+      "expo-localization"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "23a25904-2154-4359-994e-1992af48f582"
+      }
+    }
+  }
+}

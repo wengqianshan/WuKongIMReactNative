@@ -1,0 +1,50 @@
+{
+  "en": {
+
+    "send": "Send",
+    "goback": "Back",
+    "loading": "Loading",
+    "complete": "Complete",
+
+    "messages": {
+      "error_unknown": "Unknown Error",
+      "error_system": "The system is busy, please try again later",
+      "error_operate": "Operation failed",
+      "error_token_expire": "Token expired, please log in again",
+
+      "empty_title": "No content yet",
+      "empty_subtitle": "",
+      "empty_refresh": "Try pull down to refresh"
+
+    },
+
+    "$tabs": {
+      "1": "Convo",
+      "2": "Contact",
+      "3": "Group",
+      "4": "Settings"
+    },
+
+    "$home": {},
+    "$theme": {
+      "title": "Theme",
+      "default": "Default",
+      "clickToUpdate": "Click To Update",
+      "auto": "Auto",
+      "light": "Light"
+    },
+    "$language": {
+      "title": "Language"
+    },
+    "$about": {
+      "title": "About",
+      "version": "Version",
+      "review": "Write a Review",
+      "copyright": "all right reserved",
+      "privacy": "Privacy Policy",
+      "agreement": "User Agreement",
+      "feedback": "Feedback",
+      "welcome": "Welcome"
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "zh-CN": {
+
+    "send": "发送",
+    "goback": "返回",
+    "loading": "加载中",
+    "complete": "完成",
+
+    "messages": {
+      "error_unknown": "未知错误",
+      "error_system": "系统繁忙，请稍后再试",
+      "error_operate": "操作失败",
+      "error_token_expire": "Token过期，请重新登录",
+
+      "empty_title": "没有数据",
+      "empty_subtitle": "",
+      "empty_refresh": "下拉刷新试试"
+
+    },
+
+    "$tabs": {
+      "1": "对话",
+      "2": "联系人",
+      "3": "群聊",
+      "4": "设置"
+    },
+
+    "$home": {},
+    "$theme": {
+      "title": "主题",
+      "default": "默认",
+      "clickToUpdate": "点击更新",
+      "auto": "跟随系统",
+      "light": "浅色"
+    },
+    "$language": {
+      "title": "语言"
+    },
+    "$about": {
+      "title": "关于",
+      "version": "版本",
+      "review": "给我打分",
+      "copyright": "版权所有",
+      "privacy": "隐私政策",
+      "agreement": "用户协议",
+      "feedback": "意见反馈",
+      "welcome": "欢迎页"
+    }
+  }
+}

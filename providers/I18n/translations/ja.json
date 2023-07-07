@@ -1,0 +1,50 @@
+{
+  "ja": {
+
+    "send": "戻る",
+    "goback": "戻る",
+    "loading": "読み込み中",
+    "complete": "完了",
+
+    "messages": {
+      "error_unknown": "不明なエラー",
+      "error_system": "システムがビジー状態です。しばらくしてから再試行してください。",
+      "error_operate": "操作に失敗しました",
+      "error_token_expire": "トークンの有効期限が切れました。ログインし直してください。",
+
+      "empty_title": "データがありません",
+      "empty_subtitle": "",
+      "empty_refresh": "下に引っ張って更新してください"
+
+    },
+
+    "$tabs": {
+      "1": "セッション",
+      "2": "連絡先",
+      "3": "グループ化",
+      "4": "設定"
+    },
+
+    "$home": {},
+    "$theme": {
+      "title": "テーマ",
+      "default": "デフォルト",
+      "clickToUpdate": "クリックして更新",
+      "auto": "システムに従う",
+      "light": "ライト"
+    },
+    "$language": {
+      "title": "言語"
+    },
+    "$about": {
+      "title": "情報",
+      "version": "バージョン",
+      "review": "評価する",
+      "copyright": "著作権",
+      "privacy": "プライバシーポリシー",
+      "agreement": "利用規約",
+      "feedback": "フィードバック",
+      "welcome": "ウェルカムページ"
+    }
+  }
+}
