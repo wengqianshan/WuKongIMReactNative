@@ -22,6 +22,8 @@ import Group from './screens/Group';
 import Setting from './screens/Setting';
 import Sound from './screens/Sound';
 import About from './screens/About';
+import Api from './screens/Api';
+import ApiItem from './screens/ApiItem';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -169,6 +171,22 @@ const routes = [
     name: 'About',
     component: About,
     logined: true,
+  },
+  {
+    name: 'Api',
+    component: Api,
+    logined: true,
+    options: {
+      title: 'API 列表'
+    }
+  },
+  {
+    name: 'ApiItem',
+    component: ApiItem,
+    logined: true,
+    options: {
+      title: '调试'
+    }
   },
 ];
 

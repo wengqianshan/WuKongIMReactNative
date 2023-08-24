@@ -50,6 +50,16 @@ const Setting = ({ navigation }) => {
           }}
         />
       </Block>
+      <Block transparent>
+        <BlockItem
+          title='调试API'
+          showArrow
+          showBorder={false}
+          onPress={() => {
+            navigate('Api');
+          }}
+        />
+      </Block>
       <Shim position='tab' />
     </Page>
   );
