@@ -27,6 +27,29 @@ const ChatProvider = ({ children }) => {
   const { user, host, logout } = useAuth();
   const { play } = useSound();
 
+  const connectStatusListener = (status, reasonCode) => {
+    console.log('连接状态: ', status);
+    if (status === ConnectStatus.Connected) {
+      // console.log('连接成功');
+    } else {
+      // console.log('连接失败', reasonCode); //  reasonCode: 2表示认证失败（uid或token错误）
+    }
+    setStatus(status);
+  };
+  const messageListener = (message) => {
+    setMessage(message);
+  };
+  const conversationListener = (conversation, action) => {
+    if (conversation.lastMessage.fromUID !== user.uid) {
+      // 播放音乐
+      play();
+    }
+    setConversation({
+      conversation,
+      action,
+    });
+  };
+
   const connect = async ({ uid, token }) => {
     setError(null);
     console.log('开始连接', uid, token);
@@ -44,36 +67,24 @@ const ChatProvider = ({ children }) => {
     WKSDK.shared().connectManager.connect();
     // 监听连接状态
     WKSDK.shared().connectManager.addConnectStatusListener(
-      (status, reasonCode) => {
-        console.log('连接状态: ', status);
-        if (status === ConnectStatus.Connected) {
-          // console.log('连接成功');
-        } else {
-          // console.log('连接失败', reasonCode); //  reasonCode: 2表示认证失败（uid或token错误）
-        }
-        setStatus(status);
-      }
+      connectStatusListener
     );
     // 监听消息
-    WKSDK.shared().chatManager.addMessageListener((message) => {
-      setMessage(message);
-    });
+    WKSDK.shared().chatManager.addMessageListener(messageListener);
     // 监听最近会话
     WKSDK.shared().conversationManager.addConversationListener(
-      (conversation, action) => {
-        if (conversation.lastMessage.fromUID !== user.uid) {
-          // 播放音乐
-          play();
-        }
-        setConversation({
-          conversation,
-          action,
-        });
-      }
+      conversationListener
     );
   };
   const disconnect = async () => {
     // console.log('断开连接 >>>>>>>>>>');
+    WKSDK.shared().connectManager.removeConnectStatusListener(
+      connectStatusListener
+    );
+    WKSDK.shared().chatManager.removeMessageListener(messageListener);
+    WKSDK.shared().conversationManager.removeConversationListener(
+      conversationListener
+    );
     WKSDK.shared().connectManager.disconnect();
   };
 
