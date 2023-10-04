@@ -24,7 +24,13 @@ import { useAuth } from '../../providers/Auth';
 const Conversation = ({ navigation }) => {
   const theme = useTheme();
   const { user } = useAuth();
-  const { status, conversation, conversations, setConversations } = useChat();
+  const {
+    status,
+    conversation,
+    conversations,
+    setConversations,
+    channel: activeChannel,
+  } = useChat();
 
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -99,16 +105,22 @@ const Conversation = ({ navigation }) => {
     const { channelID, channelType } = channel;
     const { messageID, messageSeq, clientMsgNo, fromUID, content, timestamp } =
       lastMessage;
-    if (action === 0) {
-      // 新增
-    } else if (action === 1) {
-      // 修改
-    }
-    
-    setConversations(vals => {
-      // 这里直接去重，其实需要仔细梳理 api 和 sdk 返回的数据结构以及各字段用法
-      // 如果当前频道正在激活状态，unread置 0
-      // 如果是其他频道，在原数量基础上 +1
+
+    setConversations((vals) => {
+      let $unread = unread;
+      if (action === 0) {
+        // 新增
+        $unread = 1;
+      } else if (action === 1) {
+        // 修改
+        const exist = vals.find((item) => item.channelId === channelID);
+        $unread = exist.unread + 1;
+      }
+      // 当前频道忽略未读数
+      if (activeChannel?.channelId === channelID) {
+        $unread = 0;
+      }
+
       const values = uniqBy(
         [
           {
@@ -121,6 +133,7 @@ const Conversation = ({ navigation }) => {
               uid: fromUID,
               text: content.text,
             },
+            unread: $unread,
           },
           ...vals,
         ],
