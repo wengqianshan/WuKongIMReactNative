@@ -62,14 +62,15 @@ const Conversation = ({ navigation }) => {
     const res = await conversationSync({
       uid: user.uid,
     });
+    // console.log('同步最近会话', JSON.stringify(res));
     isRefresh ? setRefreshing(false) : setLoading(false);
     const data = res.map((item) => {
       const { channel_id, channel_type, unread, recents } = item;
       const $recent = recents[0];
-      const uid = $recent.from_uid;
-      const payload = JSON.parse(
+      const uid = $recent?.from_uid;
+      const payload = $recent ? JSON.parse(
         Buffer.from($recent.payload, 'base64').toString('utf-8')
-      );
+      ) : null;
       return {
         ...item,
         title: channel_id,
@@ -77,7 +78,7 @@ const Conversation = ({ navigation }) => {
         channelType: channel_type,
         recent: {
           uid,
-          text: payload.content,
+          text: payload?.content,
         },
       };
     });
@@ -105,16 +106,24 @@ const Conversation = ({ navigation }) => {
     const { channelID, channelType } = channel;
     const { messageID, messageSeq, clientMsgNo, fromUID, content, timestamp } =
       lastMessage;
+    let $unread = unread;
 
     setConversations((vals) => {
-      let $unread = unread;
-      if (action === 0) {
-        // 新增
-        $unread = 1;
-      } else if (action === 1) {
-        // 修改
-        const exist = vals.find((item) => item.channelId === channelID);
+      // if (action === 0) {
+      //   // 新增
+      //   $unread = 1;
+      // } else if (action === 1) {
+      //   // 修改
+      //   const exist = vals.find((item) => item.channelId === channelID);
+      //   $unread = exist.unread + 1;
+      // }
+
+      // 暂时不能依赖action的数据，因为目前会话的数据源是通过 api 获取的，会出现 app 重启后监听的会话消息 action 为0；后续考虑通过定义数据源的方式加载数据
+      const exist = vals.find((item) => item.channelId === channelID);
+      if (exist) {
         $unread = exist.unread + 1;
+      } else {
+        $unread = 1;
       }
       // 当前频道忽略未读数
       if (activeChannel?.channelId === channelID) {
