@@ -24,6 +24,9 @@ const ChatProvider = ({ children }) => {
   const setUnread = useSetRecoilState(state.unread);
   const conversations = useRecoilValue(state.conversations);
 
+  // 当前频道
+  const [channel, setChannel] = useState(null);
+
   const { user, host, logout } = useAuth();
   const { play } = useSound();
 
@@ -37,9 +40,12 @@ const ChatProvider = ({ children }) => {
     setStatus(status);
   };
   const messageListener = (message) => {
+    console.log('监听消息: ', JSON.stringify(message));
     setMessage(message);
   };
   const conversationListener = (conversation, action) => {
+    // 0:add 1:update 2:remove
+    console.log('监听最近会话: ', JSON.stringify(conversation), action);
     if (conversation.lastMessage.fromUID !== user.uid) {
       // 播放音乐
       play();
@@ -146,6 +152,8 @@ const ChatProvider = ({ children }) => {
         disconnect,
         message,
         conversation,
+        channel,
+        setChannel,
       }}
     >
       {children}

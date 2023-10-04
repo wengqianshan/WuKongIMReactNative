@@ -43,7 +43,7 @@ export default function Chat(props) {
 
   const $ref = useRef();
   const { user } = useAuth();
-  const { sdk, message } = useChat();
+  const { sdk, message, setChannel } = useChat();
   const i18n = useI18n();
   const theme = useTheme();
 
@@ -101,7 +101,7 @@ export default function Chat(props) {
       channel_id: channelId,
       channel_type: channelType,
     });
-    // console.log(res, '获取频道消息');
+    // console.log('获取频道消息', JSON.stringify(res));
     const data = res.messages?.map((message) => {
       const payload = JSON.parse(
         Buffer.from(message.payload, 'base64').toString('utf-8')
@@ -170,9 +170,15 @@ export default function Chat(props) {
   };
 
   useEffect(() => {
+    setChannel({
+      channelId,
+      channelType,
+    });
     makeUnread();
     getMsgList();
-    return () => {};
+    return () => {
+      setChannel(null);
+    };
   }, []);
 
   // 发消息

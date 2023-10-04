@@ -114,26 +114,28 @@ const Conversation = ({ navigation }) => {
     // if (exist.length) {
     //   // return;
     // }
-
-    // 这里直接去重，其实需要仔细梳理 api 和 sdk 返回的数据结构以及各字段用法
-    const values = uniqBy(
-      [
-        {
-          ...$conversation,
-          title: channelID,
-          channelId: channelID,
-          channelType: channelType,
-          timestamp,
-          recent: {
-            uid: fromUID,
-            text: content.text,
+    
+    setConversations(vals => {
+      // 这里直接去重，其实需要仔细梳理 api 和 sdk 返回的数据结构以及各字段用法
+      const values = uniqBy(
+        [
+          {
+            ...$conversation,
+            title: channelID,
+            channelId: channelID,
+            channelType: channelType,
+            timestamp,
+            recent: {
+              uid: fromUID,
+              text: content.text,
+            },
           },
-        },
-        ...conversations,
-      ],
-      (item) => item.channelId
-    );
-    setConversations(values);
+          ...vals,
+        ],
+        (item) => item.channelId
+      );
+      return values;
+    });
     return () => {};
   }, [conversation]);
 
