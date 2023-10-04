@@ -1,13 +1,11 @@
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import { ConnectStatus } from 'wukongimjssdk/lib/connect_manager';
 import { WKSDK } from 'wukongimjssdk/lib/sdk';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { getAddr } from '../../scripts/api';
 import Empty from '../../components/Empty';
 import { useAuth } from '../Auth';
 import { useSound } from '../Sound';
-import * as state from '../../scripts/state';
 
 const Context = createContext();
 
@@ -21,8 +19,8 @@ const ChatProvider = ({ children }) => {
   // 会话
   const [conversation, setConversation] = useState();
   // 未读
-  const setUnread = useSetRecoilState(state.unread);
-  const conversations = useRecoilValue(state.conversations);
+  const [unread, setUnread] = useState(null);
+  const [conversations, setConversations] = useState([]);
 
   // 当前频道
   const [channel, setChannel] = useState(null);
@@ -154,6 +152,10 @@ const ChatProvider = ({ children }) => {
         conversation,
         channel,
         setChannel,
+        unread,
+        setUnread,
+        conversations,
+        setConversations,
       }}
     >
       {children}

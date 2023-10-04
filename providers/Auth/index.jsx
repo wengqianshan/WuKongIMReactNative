@@ -1,18 +1,17 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { useRecoilState } from 'recoil';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useModal } from 'react-native-modalfy';
 
-import * as state from '../../scripts/state';
 import { getAuth } from '../../scripts/api';
+import { HOST } from '../../scripts/constant';
 
 const Context = createContext({});
 
 export default function AuthProvider({ children }) {
   const [ready, setReady] = useState(false);
   const [loading, setLoading] = useState();
-  const [user, setUser] = useRecoilState(state.user);
-  const [host, setHost] = useRecoilState(state.host);
+  const [user, setUser] = useState(null);
+  const [host, setHost] = useState(HOST);
   const { openModal } = useModal();
 
   // 登录 {tid, token}

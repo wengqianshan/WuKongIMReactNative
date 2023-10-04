@@ -5,13 +5,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
-import { useRecoilValue } from 'recoil';
 
 import { navigationRef } from './scripts/RootNavigation';
 import { useTheme } from './providers/Theme';
 import { useI18n } from './providers/I18n';
 import linking from './config/linking';
-import * as state from './scripts/state';
 
 import BackBtn from './components/BackBtn';
 import Chat from './screens/Chat';
@@ -24,6 +22,7 @@ import Sound from './screens/Sound';
 import About from './screens/About';
 import Api from './screens/Api';
 import ApiItem from './screens/ApiItem';
+import { useChat } from './providers/Chat';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -33,7 +32,7 @@ const isAndroid = Platform.OS === 'android';
 function HomeStack() {
   const theme = useTheme();
   const i18n = useI18n();
-  const unread = useRecoilValue(state.unread);
+  const { unread } = useChat();
 
   return (
     <Tab.Navigator
@@ -177,16 +176,16 @@ const routes = [
     component: Api,
     logined: true,
     options: {
-      title: 'API 列表'
-    }
+      title: 'API 列表',
+    },
   },
   {
     name: 'ApiItem',
     component: ApiItem,
     logined: true,
     options: {
-      title: '调试'
-    }
+      title: '调试',
+    },
   },
 ];
 

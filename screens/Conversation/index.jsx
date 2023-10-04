@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { uniqBy } from 'lodash';
-import { useRecoilState } from 'recoil';
 import { FlashList } from '@shopify/flash-list';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { Buffer } from 'buffer';
@@ -20,15 +19,12 @@ import { navigate } from '../../scripts/RootNavigation';
 import Shim from '../../components/Shim';
 import { useChat } from '../../providers/Chat';
 import { conversationSync } from '../../scripts/api';
-import * as state from '../../scripts/state';
 import { useAuth } from '../../providers/Auth';
 
 const Conversation = ({ navigation }) => {
   const theme = useTheme();
   const { user } = useAuth();
-  const { status, conversation } = useChat();
-
-  const [conversations, setConversations] = useRecoilState(state.conversations);
+  const { status, conversation, conversations, setConversations } = useChat();
 
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -108,15 +104,11 @@ const Conversation = ({ navigation }) => {
     } else if (action === 1) {
       // 修改
     }
-
-    // 检查会话是否为新会话, TODO: 新会话高亮
-    // const exist = conversations.filter((item) => item.channelId === channelID);
-    // if (exist.length) {
-    //   // return;
-    // }
     
     setConversations(vals => {
       // 这里直接去重，其实需要仔细梳理 api 和 sdk 返回的数据结构以及各字段用法
+      // 如果当前频道正在激活状态，unread置 0
+      // 如果是其他频道，在原数量基础上 +1
       const values = uniqBy(
         [
           {

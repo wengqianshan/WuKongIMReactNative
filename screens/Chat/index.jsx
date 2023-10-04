@@ -18,7 +18,6 @@ import { Channel, ChannelTypePerson, MessageText } from 'wukongimjssdk/lib/sdk';
 import { Buffer } from 'buffer';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
-import { useSetRecoilState } from 'recoil';
 import 'dayjs/locale/zh-cn';
 
 import { useI18n } from '../../providers/I18n';
@@ -30,7 +29,6 @@ import {
   conversationUnread,
   getChannelMessages,
 } from '../../scripts/api';
-import * as state from '../../scripts/state';
 import { useAuth } from '../../providers/Auth';
 import { goBack } from '../../scripts/RootNavigation';
 
@@ -43,11 +41,10 @@ export default function Chat(props) {
 
   const $ref = useRef();
   const { user } = useAuth();
-  const { sdk, message, setChannel } = useChat();
+  const { sdk, message, setChannel, setConversations } = useChat();
   const i18n = useI18n();
   const theme = useTheme();
 
-  const setConversations = useSetRecoilState(state.conversations);
   const [messages, setMessages] = useState([]);
   const insets = useSafeAreaInsets();
 
