@@ -25,7 +25,6 @@ import { useTheme } from '../../providers/Theme';
 import Page from '../../components/Page';
 import { useChat } from '../../providers/Chat';
 import {
-  conversationDelete,
   conversationUnread,
   getChannelMessages,
 } from '../../scripts/api';
@@ -48,32 +47,9 @@ export default function Chat(props) {
   const [messages, setMessages] = useState([]);
   const insets = useSafeAreaInsets();
 
-  const handleDelete = async () => {
-    await conversationDelete({
-      uid: user.uid,
-      channel_id: channelId,
-      channel_type: channelType,
-    });
-    setConversations((curr) =>
-      curr.filter((item) => item.channelId !== channelId)
-    );
-    goBack();
-  };
-
   useEffect(() => {
     navigation.setOptions({
       title: `${channelId}${channelType === 2 ? '(群聊)' : ''}`,
-      headerRight: () => {
-        return (
-          <Pressable hitSlop={20} onPress={handleDelete}>
-            <Ionicons
-              name='trash-outline'
-              size={24}
-              color={theme.color.primary}
-            />
-          </Pressable>
-        );
-      },
       // headerBackgroundContainerStyle: {
       //   backgroundColor: isAndroid ? theme.color.background : 'transparent',
       // },

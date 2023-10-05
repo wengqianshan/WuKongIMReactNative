@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
+  Animated,
   View,
   Text,
   StyleSheet,
@@ -11,6 +12,7 @@ import { FlashList } from '@shopify/flash-list';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { Buffer } from 'buffer';
 import dayjs from 'dayjs';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import { useTheme } from '../../providers/Theme';
 import Page from '../../components/Page';
@@ -18,8 +20,9 @@ import BlockItem from '../../components/BlockItem';
 import { navigate } from '../../scripts/RootNavigation';
 import Shim from '../../components/Shim';
 import { useChat } from '../../providers/Chat';
-import { conversationSync } from '../../scripts/api';
+import { conversationDelete, conversationSync } from '../../scripts/api';
 import { useAuth } from '../../providers/Auth';
+import Button from '../../components/Button';
 
 const Conversation = ({ navigation }) => {
   const theme = useTheme();
@@ -56,6 +59,18 @@ const Conversation = ({ navigation }) => {
     });
   };
 
+  const handleDelete = async (item) => {
+    const { channelId, channelType } = item;
+    await conversationDelete({
+      uid: user.uid,
+      channel_id: channelId,
+      channel_type: channelType,
+    });
+    setConversations((curr) =>
+      curr.filter((item) => item.channelId !== channelId)
+    );
+  };
+
   // 同步会话
   const syncConversation = async (isRefresh) => {
     isRefresh ? setRefreshing(true) : setLoading(true);
@@ -68,9 +83,9 @@ const Conversation = ({ navigation }) => {
       const { channel_id, channel_type, unread, recents } = item;
       const $recent = recents[0];
       const uid = $recent?.from_uid;
-      const payload = $recent ? JSON.parse(
-        Buffer.from($recent.payload, 'base64').toString('utf-8')
-      ) : null;
+      const payload = $recent
+        ? JSON.parse(Buffer.from($recent.payload, 'base64').toString('utf-8'))
+        : null;
       return {
         ...item,
         title: channel_id,
@@ -181,86 +196,137 @@ const Conversation = ({ navigation }) => {
       )}
       <FlashList
         estimatedItemSize={70}
+        keyExtractor={(item) => item.channelId}
         renderItem={({ item, index }) => {
           const { recent, timestamp } = item;
           const time = dayjs(timestamp * 1000).format('HH:mm');
           const isGroup = item.channelType === 2;
           return (
-            <BlockItem
-              showArrow={false}
-              content={
-                <View
-                  style={{
-                    flex: 1,
-                    paddingVertical: 12,
-                    paddingRight: 16,
-                  }}
-                >
+            <Swipeable
+              friction={2}
+              enableTrackpadTwoFingerGesture
+              rightThreshold={40}
+              renderRightActions={(progress) => {
+                const trans = progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [100, 0],
+                });
+                return (
                   <View
                     style={{
+                      width: 100,
                       flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      position: 'relative',
+                      marginBottom: 1,
                     }}
                   >
-                    {item.unread > 0 && (
-                      <View
-                        style={{
-                          backgroundColor: theme.color.error,
-                          position: 'absolute',
-                          right: 0,
-                          bottom: -20,
-                          borderRadius: 20,
-                          paddingHorizontal: 8,
-                          paddingVertical: 2,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            color: theme.color.on_error,
-                            fontSize: 12,
-                          }}
-                        >
-                          {item.unread}
-                        </Text>
-                      </View>
-                    )}
-
-                    <Text
+                    <Animated.View
                       style={{
-                        fontSize: 16,
-                        fontWeight: '500',
-                        color: theme.color.text,
+                        flex: 1,
+                        justifyContent: 'center',
+                        backgroundColor: theme.color.error,
+                        transform: [
+                          {
+                            translateX: trans,
+                          },
+                        ],
                       }}
                     >
-                      {`${item.title}${isGroup ? '(群聊)' : ''}`}
-                    </Text>
-                    <Text style={{ color: theme.color.text_light }}>
-                      {time}
-                    </Text>
+                      <Button
+                        // size='small'
+                        text='删除'
+                        onPress={() => {
+                          handleDelete(item);
+                        }}
+                        style={{
+                          flex: 1,
+                          borderRadius: 0,
+                          backgroundColor: theme.color.error,
+                        }}
+                      />
+                    </Animated.View>
                   </View>
+                );
+              }}
+            >
+              <BlockItem
+                showArrow={false}
+                style={{
+                  backgroundColor: theme.color.container,
+                }}
+                content={
                   <View
                     style={{
-                      alignItems: 'center',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
+                      flex: 1,
+                      paddingVertical: 12,
+                      paddingRight: 16,
                     }}
                   >
-                    <Text
-                      numberOfLines={1}
-                      style={{ marginTop: 4, color: theme.color.text_light }}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        position: 'relative',
+                      }}
                     >
-                      {isGroup ? `${recent.uid}: ` : ''}
-                      {recent.text}
-                    </Text>
+                      {item.unread > 0 && (
+                        <View
+                          style={{
+                            backgroundColor: theme.color.error,
+                            position: 'absolute',
+                            right: 0,
+                            bottom: -20,
+                            borderRadius: 20,
+                            paddingHorizontal: 8,
+                            paddingVertical: 2,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: theme.color.on_error,
+                              fontSize: 12,
+                            }}
+                          >
+                            {item.unread}
+                          </Text>
+                        </View>
+                      )}
+
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontWeight: '500',
+                          color: theme.color.text,
+                        }}
+                      >
+                        {`${item.title}${isGroup ? '(群聊)' : ''}`}
+                      </Text>
+                      <Text style={{ color: theme.color.text_light }}>
+                        {time}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <Text
+                        numberOfLines={1}
+                        style={{ marginTop: 4, color: theme.color.text_light }}
+                      >
+                        {isGroup ? `${recent.uid}: ` : ''}
+                        {recent.text}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              }
-              showBorder={!(index === conversations.length - 1)}
-              onPress={() => {
-                handlePress(item);
-              }}
-            />
+                }
+                showBorder={!(index === conversations.length - 1)}
+                onPress={() => {
+                  handlePress(item);
+                }}
+              />
+            </Swipeable>
           );
         }}
         data={conversations}
