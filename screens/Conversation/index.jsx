@@ -168,6 +168,8 @@ const Conversation = ({ navigation }) => {
     return () => {};
   }, [conversation]);
 
+  const keyExtractor = useCallback((item, i) => `${i}-${item.channelId}`, []);
+
   return (
     <Page>
       {loading && (
@@ -196,7 +198,7 @@ const Conversation = ({ navigation }) => {
       )}
       <FlashList
         estimatedItemSize={70}
-        keyExtractor={(item) => item.channelId}
+        keyExtractor={keyExtractor}
         renderItem={({ item, index }) => {
           const { recent, timestamp } = item;
           const time = dayjs(timestamp * 1000).format('HH:mm');

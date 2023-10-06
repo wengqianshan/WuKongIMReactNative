@@ -8,10 +8,12 @@ import ChatProvider from './providers/Chat';
 import AuthProvider from './providers/Auth';
 import ModalProvider from './providers/Modal';
 import SoundProvider from './providers/Sound';
+import GestureProvider from './providers/Gesture';
 import Boot from './boot';
 
 const providers = [
   RecoilRoot,
+  GestureProvider,
   SafeAreaProvider,
   I18nProvider,
   ThemeProvider,
