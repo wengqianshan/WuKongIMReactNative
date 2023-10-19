@@ -19,7 +19,7 @@ const Context = createContext();
  */
 const dark = {
   name: '$theme.dark',
-  title: '深色主题',
+  title: '深色',
   values: {
     color: {
       primary: '#1a74e2',
@@ -37,7 +37,7 @@ const dark = {
 
 const light = {
   name: '$theme.light',
-  title: '浅色主题',
+  title: '浅色',
   values: {
     color: {
       primary: '#007AFF',
