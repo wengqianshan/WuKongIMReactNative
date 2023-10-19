@@ -12,7 +12,7 @@ const Block = (props) => {
     transparent = false,
   } = props;
 
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   const $props = {
     backgroundColor: transparent ? 'transparent' : theme.color.container,

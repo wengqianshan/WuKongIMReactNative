@@ -7,7 +7,7 @@ import Block from '../../Block';
 const Alert = ({ modal: { closeModal, params = {} } }) => {
   const { title, message } = params;
 
-  const theme = useTheme();
+  const {theme} = useTheme();
   const { width } = useWindowDimensions();
 
   return (

@@ -28,7 +28,7 @@ const BlockItem = (props) => {
     vertical = false, // title和内容垂直布局
   } = props;
 
-  const theme = useTheme();
+  const {theme} = useTheme();
   const [pressed, setPressed] = useState(false);
 
   const pressIn = () => {

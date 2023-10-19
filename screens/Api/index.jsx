@@ -41,7 +41,7 @@ const APIS = [
 ];
 
 const Api = () => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   return (
     <Page>
       <FlashList

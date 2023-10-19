@@ -10,7 +10,7 @@ const Loading = (props) => {
   const i18n = useI18n();
   const { style, message = i18n.t('loading'), block, oprops = {} } = props;
 
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   return (
     <Empty style={[styles.container, style]} {...oprops}>

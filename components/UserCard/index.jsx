@@ -6,7 +6,7 @@ import Block from '../Block';
 import BlockItem from '../BlockItem';
 
 const UserCard = () => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const { user, host } = useAuth();
 
   return (

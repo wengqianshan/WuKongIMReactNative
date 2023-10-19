@@ -7,7 +7,7 @@ const Index = (props) => {
   const { children, style = {}, onPress, level = 0, pressable = true } = props;
 
   const [pressed, setPressed] = useState(false);
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   const pressIn = () => {
     if (!pressable) {

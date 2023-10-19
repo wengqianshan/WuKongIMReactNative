@@ -14,7 +14,7 @@ import Block from '../../Block';
 
 const ContactAdd = ({ modal: { closeModal, getParam } }) => {
   const cb = getParam('callback', () => {});
-  const theme = useTheme();
+  const {theme} = useTheme();
   const { width } = useWindowDimensions();
 
   const [val, setValue] = useState('');

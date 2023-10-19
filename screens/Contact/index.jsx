@@ -14,7 +14,7 @@ import { navigate } from '../../scripts/RootNavigation';
 import { useAuth } from '../../providers/Auth';
 
 const Contact = ({ navigation }) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   const { user } = useAuth();
   const { openModal } = useModal();

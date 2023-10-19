@@ -50,7 +50,7 @@ const Empty = (props) => {
     $buttons = [...$buttons, ...buttons];
   }
 
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   const $icon =
     typeof icon === 'object' ? (

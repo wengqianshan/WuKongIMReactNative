@@ -8,7 +8,7 @@ import icon from '../../assets/icon.png';
 const { name, version, buildVersion } = appInfo();
 
 const About = ({ navigation }) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   useEffect(() => {
     navigation.setOptions({
       title: '关于',

@@ -23,6 +23,7 @@ import About from './screens/About';
 import Api from './screens/Api';
 import ApiItem from './screens/ApiItem';
 import { useChat } from './providers/Chat';
+import Theme from './screens/Theme';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,7 +31,7 @@ const isAndroid = Platform.OS === 'android';
 
 // 首页+tab
 function HomeStack() {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const i18n = useI18n();
   const { unread } = useChat();
 
@@ -187,12 +188,16 @@ const routes = [
       title: '调试',
     },
   },
+  {
+    name: 'Theme',
+    component: Theme,
+  }
 ];
 
 const Router = (props) => {
   const { onReady = () => {}, initialRouteName, logined = false } = props || {};
 
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   // 路由主题
   const navtheme = {

@@ -20,7 +20,7 @@ const Button = (props) => {
 
   const [pressed, setPressed] = useState(false);
 
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   const pressIn = () => {
     setPressed(true);

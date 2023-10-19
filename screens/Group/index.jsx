@@ -34,7 +34,7 @@ const actions = {
 };
 
 const Group = ({ navigation }) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   const { user } = useAuth();
   const { openModal } = useModal();

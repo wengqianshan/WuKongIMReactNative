@@ -8,7 +8,7 @@ import { useTheme } from '../../providers/Theme';
 import { useSound } from '../../providers/Sound';
 
 const Sound = ({ navigation }) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const { sounds, play, current, setCurrent, enabled, setEnabled } = useSound();
 
   useEffect(() => {

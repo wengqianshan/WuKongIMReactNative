@@ -21,7 +21,7 @@ const Input = (props) => {
   const [focused, setFocus] = useState(false);
   const [value, setValue] = useState('');
 
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   const onFocus = () => {
     setFocus(true);

@@ -25,7 +25,7 @@ import { useAuth } from '../../providers/Auth';
 import Button from '../../components/Button';
 
 const Conversation = ({ navigation }) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const { user } = useAuth();
   const {
     status,
@@ -199,6 +199,7 @@ const Conversation = ({ navigation }) => {
       <FlashList
         estimatedItemSize={70}
         keyExtractor={keyExtractor}
+        extraData={theme}
         renderItem={({ item, index }) => {
           const { recent, timestamp } = item;
           const time = dayjs(timestamp * 1000).format('HH:mm');

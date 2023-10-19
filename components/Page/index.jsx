@@ -13,7 +13,7 @@ const Page = (props) => {
     ...otherProps
   } = props;
 
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   const Container = scroll ? ScrollView : View;
 

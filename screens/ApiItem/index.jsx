@@ -12,7 +12,7 @@ const ApiItem = (props) => {
   const { navigation, route } = props;
   const { name } = route.params || {};
 
-  const theme = useTheme();
+  const {theme} = useTheme();
   const { host } = useAuth();
 
   const [api, setApi] = useState();

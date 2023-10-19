@@ -11,7 +11,7 @@ import Block from '../../components/Block';
 import BlockItem from '../../components/BlockItem';
 
 const Setting = ({ navigation }) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   const { logout } = useAuth();
 
@@ -35,6 +35,23 @@ const Setting = ({ navigation }) => {
       <UserCard />
       <Block transparent>
         <BlockItem
+          title='调试API'
+          showArrow
+          showBorder={false}
+          onPress={() => {
+            navigate('Api');
+          }}
+        />
+      </Block>
+      <Block transparent>
+        <BlockItem
+          title='主题切换'
+          showArrow
+          onPress={() => {
+            navigate('Theme');
+          }}
+        />
+        <BlockItem
           title='消息提示'
           showArrow
           onPress={() => {
@@ -47,16 +64,6 @@ const Setting = ({ navigation }) => {
           showBorder={false}
           onPress={() => {
             navigate('About');
-          }}
-        />
-      </Block>
-      <Block transparent>
-        <BlockItem
-          title='调试API'
-          showArrow
-          showBorder={false}
-          onPress={() => {
-            navigate('Api');
           }}
         />
       </Block>

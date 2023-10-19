@@ -11,7 +11,7 @@ import Shim from '../../components/Shim';
 import { useAuth } from '../../providers/Auth';
 
 const Login = ({ navigation }) => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const { login, host, setHost } = useAuth();
 
   const [currentUser, setCurrentUser] = useState({});

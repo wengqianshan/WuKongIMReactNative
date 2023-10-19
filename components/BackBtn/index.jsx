@@ -9,7 +9,7 @@ const BackBtn = (props) => {
   // type: back close
   const { type = 'back' } = props;
 
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   return (
     <Pressable

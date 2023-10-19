@@ -6,7 +6,7 @@ import { useTheme } from './providers/Theme';
 import { useAuth } from './providers/Auth';
 
 const Boot = () => {
-  const theme = useTheme();
+  const {theme} = useTheme();
   const { user } = useAuth();
 
   const routeName = user ? 'Home' : 'Login';

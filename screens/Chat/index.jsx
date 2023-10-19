@@ -42,7 +42,7 @@ export default function Chat(props) {
   const { user } = useAuth();
   const { sdk, message, setChannel, setConversations } = useChat();
   const i18n = useI18n();
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   const [messages, setMessages] = useState([]);
   const insets = useSafeAreaInsets();

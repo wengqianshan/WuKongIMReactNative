@@ -5,6 +5,7 @@ import _ from 'lodash';
 import * as SystemUI from 'expo-system-ui';
 
 import { palette } from './lib';
+import { setToastTheme } from '../../scripts/utils';
 
 const Context = createContext();
 
@@ -12,10 +13,9 @@ const Context = createContext();
  * 换肤
  *
  * 使用方法
- * const theme = useTheme();
+ * const { theme, current, setCurrent } = useTheme();
  * {theme.color.primary}
- * const [currentTheme, setCurrentTheme] = useThemeConfig();
- * setCurrentTheme(obj);
+ * setCurrent(obj);
  */
 const dark = {
   name: '$theme.dark',
@@ -60,6 +60,7 @@ const schemes = {
 
 const setSystemBackground = (obj) => {
   SystemUI.setBackgroundColorAsync(obj.values?.color?.background);
+  setToastTheme(obj.values);
 };
 
 const ThemeProvider = ({ children }) => {
@@ -88,6 +89,7 @@ const ThemeProvider = ({ children }) => {
   useEffect(() => {
     const init = async () => {
       // TODO: 主题远程同步
+      // await AsyncStorage.removeItem('@theme');
 
       // 获取默认主题
       const val = await AsyncStorage.getItem('@theme');
@@ -124,11 +126,11 @@ const ThemeProvider = ({ children }) => {
   return (
     <Context.Provider
       value={{
-        defaults: [light, dark],
+        defaults: [{ name: '$theme.auto', title: '跟随系统' }, light, dark],
         theme,
         current,
-        setTheme,
-        resetTheme,
+        setCurrent: setTheme,
+        reset: resetTheme,
       }}
     >
       {children}
@@ -139,17 +141,5 @@ const ThemeProvider = ({ children }) => {
 export default ThemeProvider;
 
 export const useTheme = () => {
-  const { theme } = useContext(Context);
-  return theme;
-};
-
-export const useThemeConfig = () => {
-  const { current, setTheme, defaults } = useContext(Context);
-
-  return [current, setTheme, defaults];
-};
-
-export const useResetTheme = () => {
-  const { resetTheme } = useContext(Context);
-  return resetTheme;
+  return useContext(Context);
 };

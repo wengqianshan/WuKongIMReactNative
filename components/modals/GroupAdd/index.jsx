@@ -21,7 +21,7 @@ const GroupAdd = ({ modal: { closeModal, getParam, params } }) => {
   // console.log(params);
   const { action } = params;
   const cb = getParam('callback', () => {});
-  const theme = useTheme();
+  const {theme} = useTheme();
   const { width } = useWindowDimensions();
 
   const [val, setValue] = useState('');
