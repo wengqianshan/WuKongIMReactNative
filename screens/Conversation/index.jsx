@@ -25,9 +25,10 @@ import { useAuth } from '../../providers/Auth';
 import Button from '../../components/Button';
 
 const Conversation = ({ navigation }) => {
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   const { user } = useAuth();
   const {
+    sdk,
     status,
     conversation,
     conversations,
@@ -74,6 +75,10 @@ const Conversation = ({ navigation }) => {
   // 同步会话
   const syncConversation = async (isRefresh) => {
     isRefresh ? setRefreshing(true) : setLoading(true);
+    // const res = await sdk.shared().conversationManager.sync({
+    //   uid: user.uid,
+    // });
+    // console.log(res, '++++++++++++++');
     const res = await conversationSync({
       uid: user.uid,
     });
@@ -168,7 +173,10 @@ const Conversation = ({ navigation }) => {
     return () => {};
   }, [conversation]);
 
-  const keyExtractor = useCallback((item, i) => `${item.channelType}:${item.channelId}`, []);
+  const keyExtractor = useCallback(
+    (item, i) => `${item.channelType}:${item.channelId}`,
+    []
+  );
 
   return (
     <Page>

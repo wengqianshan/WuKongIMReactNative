@@ -24,10 +24,7 @@ import { useI18n } from '../../providers/I18n';
 import { useTheme } from '../../providers/Theme';
 import Page from '../../components/Page';
 import { useChat } from '../../providers/Chat';
-import {
-  conversationUnread,
-  getChannelMessages,
-} from '../../scripts/api';
+import { conversationUnread, getChannelMessages } from '../../scripts/api';
 import { useAuth } from '../../providers/Auth';
 import { goBack } from '../../scripts/RootNavigation';
 
@@ -42,7 +39,7 @@ export default function Chat(props) {
   const { user } = useAuth();
   const { sdk, message, setChannel, setConversations } = useChat();
   const i18n = useI18n();
-  const {theme} = useTheme();
+  const { theme } = useTheme();
 
   const [messages, setMessages] = useState([]);
   const insets = useSafeAreaInsets();
@@ -69,12 +66,21 @@ export default function Chat(props) {
   }, [channelId, theme]);
 
   const getMsgList = async () => {
-    const res = await getChannelMessages({
-      login_uid: user.uid,
-      channel_id: channelId,
-      channel_type: channelType,
-    });
-    // console.log('获取频道消息', JSON.stringify(res));
+    // const res = await getChannelMessages({
+    //   login_uid: user.uid,
+    //   channel_id: channelId,
+    //   channel_type: channelType,
+    // });
+    const res = await sdk.shared().chatManager.syncMessages(
+      {
+        channelId,
+        channelType,
+      },
+      {
+        user,
+      }
+    );
+    console.log('获取频道消息', JSON.stringify(res));
     const data = res.messages?.map((message) => {
       const payload = JSON.parse(
         Buffer.from(message.payload, 'base64').toString('utf-8')

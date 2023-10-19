@@ -2,7 +2,11 @@ import React, { useEffect, useState, createContext, useContext } from 'react';
 import { ConnectStatus } from 'wukongimjssdk/lib/connect_manager';
 import { WKSDK } from 'wukongimjssdk/lib/sdk';
 
-import { getAddr } from '../../scripts/api';
+import {
+  conversationSync,
+  getAddr,
+  getChannelMessages,
+} from '../../scripts/api';
 import Empty from '../../components/Empty';
 import { useAuth } from '../Auth';
 import { useSound } from '../Sound';
@@ -97,10 +101,42 @@ const ChatProvider = ({ children }) => {
       return;
     }
     connect(user);
+    initSources();
     return () => {
       disconnect();
     };
   }, [host, user]);
+
+  // 设置数据源
+  const initSources = async () => {
+    // 最近会话
+    // const conversations = await WKSDK.shared().conversationManager.sync({})
+    // 提供最近会话同步的数据源
+    WKSDK.shared().config.provider.syncConversationsCallback = async (args) => {
+      console.log('最近会话数据源:', args);
+      const conversations = await conversationSync(args);
+      return conversations;
+    };
+
+    // 同步消息
+    // const messages = await WKSDK.shared().chatManager.syncMessages(channel, opts)
+    WKSDK.shared().config.provider.syncMessagesCallback = async (
+      channel,
+      opts
+    ) => {
+      console.log('消息数据源:', channel, opts);
+      // 后端提供的获取频道消息列表的接口数据 然后构建成 Message对象数组返回
+      const { channelId, channelType } = channel;
+      const { user } = opts;
+      const messages = await getChannelMessages({
+        login_uid: user.uid,
+        channel_id: channelId,
+        channel_type: channelType,
+      });
+      // message.remoteExtra.extra = ...  //一些第三方数据可以放在这里
+      return messages;
+    };
+  };
 
   // 更新未读消息数
   useEffect(() => {
