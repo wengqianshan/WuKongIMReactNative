@@ -168,7 +168,7 @@ const Conversation = ({ navigation }) => {
     return () => {};
   }, [conversation]);
 
-  const keyExtractor = useCallback((item, i) => `${item.channelId}`, []);
+  const keyExtractor = useCallback((item, i) => `${item.channelType}:${item.channelId}`, []);
 
   return (
     <Page>
