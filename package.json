@@ -15,6 +15,7 @@
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "@shopify/flash-list": "1.4.3",
+    "bignumber.js": "^9.1.2",
     "buffer": "^6.0.3",
     "camelcase": "^8.0.0",
     "color": "^4.2.3",

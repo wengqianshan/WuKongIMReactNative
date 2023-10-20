@@ -10,6 +10,7 @@ import {
 import Empty from '../../components/Empty';
 import { useAuth } from '../Auth';
 import { useSound } from '../Sound';
+import { toConversation, toMessage } from '../../scripts/convert';
 
 const Context = createContext();
 
@@ -115,7 +116,10 @@ const ChatProvider = ({ children }) => {
     WKSDK.shared().config.provider.syncConversationsCallback = async (args) => {
       console.log('最近会话数据源:', args);
       const conversations = await conversationSync(args);
-      return conversations;
+      const res = conversations.map((item) => {
+        return toConversation(item);
+      });
+      return res;
     };
 
     // 同步消息
@@ -124,13 +128,16 @@ const ChatProvider = ({ children }) => {
       console.log('消息数据源:', args);
       // 后端提供的获取频道消息列表的接口数据 然后构建成 Message对象数组返回
       const { channelId, channelType, user } = args;
-      const messages = await getChannelMessages({
+      const res = await getChannelMessages({
         login_uid: user.uid,
         channel_id: channelId,
         channel_type: channelType,
       });
+      res.messages = res.messages.map((item) => {
+        return toMessage(item);
+      });
       // message.remoteExtra.extra = ...  //一些第三方数据可以放在这里
-      return messages;
+      return res;
     };
   };
 

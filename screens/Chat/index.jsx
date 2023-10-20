@@ -15,7 +15,6 @@ import {
 } from 'react-native-gifted-chat';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Channel, ChannelTypePerson, MessageText } from 'wukongimjssdk/lib/sdk';
-import { Buffer } from 'buffer';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import 'dayjs/locale/zh-cn';
@@ -76,18 +75,16 @@ export default function Chat(props) {
       channelType,
       user,
     });
-    console.log('获取频道消息', JSON.stringify(res));
+    // console.log('获取频道消息', JSON.stringify(res));
     const data = res.messages?.map((message) => {
-      const payload = JSON.parse(
-        Buffer.from(message.payload, 'base64').toString('utf-8')
-      );
+      const { messageID, content, timestamp, fromUID } = message;
       return {
-        _id: message.message_id,
-        text: payload.content,
-        createdAt: new Date(message.timestamp * 1000),
+        _id: messageID,
+        text: content.text,
+        createdAt: new Date(timestamp * 1000),
         user: {
-          _id: message.from_uid,
-          name: message.from_uid,
+          _id: fromUID,
+          name: fromUID,
         },
       };
     });

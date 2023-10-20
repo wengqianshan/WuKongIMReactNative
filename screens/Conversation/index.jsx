@@ -10,7 +10,6 @@ import {
 import { uniqBy } from 'lodash';
 import { FlashList } from '@shopify/flash-list';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { Buffer } from 'buffer';
 import dayjs from 'dayjs';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
@@ -75,30 +74,28 @@ const Conversation = ({ navigation }) => {
   // 同步会话
   const syncConversation = async (isRefresh) => {
     isRefresh ? setRefreshing(true) : setLoading(true);
-    // const res = await sdk.shared().conversationManager.sync({
-    //   uid: user.uid,
-    // });
-    // console.log(res, '++++++++++++++');
-    const res = await conversationSync({
+    const res = await sdk.shared().conversationManager.sync({
       uid: user.uid,
     });
+    // console.log(res, '++++++++++++++');
+    // const res = await conversationSync({
+    //   uid: user.uid,
+    // });
     // console.log('同步最近会话', JSON.stringify(res));
     isRefresh ? setRefreshing(false) : setLoading(false);
     const data = res.map((item) => {
-      const { channel_id, channel_type, unread, recents } = item;
-      const $recent = recents[0];
-      const uid = $recent?.from_uid;
-      const payload = $recent
-        ? JSON.parse(Buffer.from($recent.payload, 'base64').toString('utf-8'))
-        : null;
+      const { channel, lastMessage } = item;
+      const { channelID, channelType } = channel;
+      const { fromUID, content } = lastMessage || {};
+
       return {
         ...item,
-        title: channel_id,
-        channelId: channel_id,
-        channelType: channel_type,
+        title: channelID,
+        channelId: channelID,
+        channelType: channelType,
         recent: {
-          uid,
-          text: payload?.content,
+          uid: fromUID,
+          text: content?.text,
         },
       };
     });
