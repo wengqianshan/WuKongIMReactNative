@@ -71,15 +71,11 @@ export default function Chat(props) {
     //   channel_id: channelId,
     //   channel_type: channelType,
     // });
-    const res = await sdk.shared().chatManager.syncMessages(
-      {
-        channelId,
-        channelType,
-      },
-      {
-        user,
-      }
-    );
+    const res = await sdk.shared().chatManager.syncMessages({
+      channelId,
+      channelType,
+      user,
+    });
     console.log('获取频道消息', JSON.stringify(res));
     const data = res.messages?.map((message) => {
       const payload = JSON.parse(

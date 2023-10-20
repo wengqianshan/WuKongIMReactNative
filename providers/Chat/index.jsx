@@ -120,14 +120,10 @@ const ChatProvider = ({ children }) => {
 
     // 同步消息
     // const messages = await WKSDK.shared().chatManager.syncMessages(channel, opts)
-    WKSDK.shared().config.provider.syncMessagesCallback = async (
-      channel,
-      opts
-    ) => {
-      console.log('消息数据源:', channel, opts);
+    WKSDK.shared().config.provider.syncMessagesCallback = async (args) => {
+      console.log('消息数据源:', args);
       // 后端提供的获取频道消息列表的接口数据 然后构建成 Message对象数组返回
-      const { channelId, channelType } = channel;
-      const { user } = opts;
+      const { channelId, channelType, user } = args;
       const messages = await getChannelMessages({
         login_uid: user.uid,
         channel_id: channelId,
