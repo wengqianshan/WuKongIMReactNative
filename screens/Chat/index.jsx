@@ -14,7 +14,7 @@ import {
   Send,
 } from 'react-native-gifted-chat';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Channel, ChannelTypePerson, MessageText } from 'wukongimjssdk/lib/sdk';
+import { Channel, ChannelTypePerson, MessageText } from 'wukongimjssdk';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import 'dayjs/locale/zh-cn';
@@ -80,7 +80,7 @@ export default function Chat(props) {
       const { messageID, content, timestamp, fromUID } = message;
       return {
         _id: messageID,
-        text: content.text,
+        text: content.content || content.text,
         createdAt: new Date(timestamp * 1000),
         user: {
           _id: fromUID,

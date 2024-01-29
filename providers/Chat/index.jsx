@@ -1,6 +1,5 @@
 import React, { useEffect, useState, createContext, useContext } from 'react';
-import { ConnectStatus } from 'wukongimjssdk/lib/connect_manager';
-import { WKSDK } from 'wukongimjssdk/lib/sdk';
+import { WKSDK, ConnectStatus } from 'wukongimjssdk';
 
 import {
   conversationSync,
@@ -10,7 +9,7 @@ import {
 import Empty from '../../components/Empty';
 import { useAuth } from '../Auth';
 import { useSound } from '../Sound';
-import { toConversation, toMessage } from '../../scripts/convert';
+import { Convert } from '../../scripts/convert';
 
 const Context = createContext();
 
@@ -117,7 +116,7 @@ const ChatProvider = ({ children }) => {
       console.log('最近会话数据源:', args);
       const conversations = await conversationSync(args);
       const res = conversations.map((item) => {
-        return toConversation(item);
+        return Convert.toConversation(item);
       });
       return res;
     };
@@ -134,7 +133,7 @@ const ChatProvider = ({ children }) => {
         channel_type: channelType,
       });
       res.messages = res.messages.map((item) => {
-        return toMessage(item);
+        return Convert.toMessage(item);
       });
       // message.remoteExtra.extra = ...  //一些第三方数据可以放在这里
       return res;

@@ -77,7 +77,6 @@ const Conversation = ({ navigation }) => {
     const res = await sdk.shared().conversationManager.sync({
       uid: user.uid,
     });
-    // console.log(res, '++++++++++++++');
     // const res = await conversationSync({
     //   uid: user.uid,
     // });
@@ -95,7 +94,7 @@ const Conversation = ({ navigation }) => {
         channelType: channelType,
         recent: {
           uid: fromUID,
-          text: content?.text,
+          text: content?.content,
         },
       };
     });

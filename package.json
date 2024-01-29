@@ -46,7 +46,7 @@
     "react-native-uuid": "^2.0.1",
     "recoil": "^0.7.7",
     "wukongapi": "^1.0.0",
-    "wukongimjssdk": "^1.0.4"
+    "wukongimjssdk": "^1.2.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

@@ -1,292 +1,201 @@
 import { Buffer } from 'buffer';
-import BigNumber from 'bignumber.js';
-import {
-  WKSDK,
-  ChannelInfo,
-  Channel,
-  Conversation,
-  Message,
-  MessageStatus,
-  ChannelTypePerson,
-  ChannelTypeGroup,
-  ConversationExtra,
-  Reminder,
-  MessageExtra,
-  Setting,
-} from 'wukongimjssdk/lib/sdk';
+import BigNumber from "bignumber.js";
+import { Setting } from "wukongimjssdk";
+import { WKSDK, ChannelInfo, Channel, Conversation, Message, MessageStatus, ChannelTypePerson, ChannelTypeGroup,ConversationExtra,Reminder, MessageExtra } from "wukongimjssdk";
 
-export const toConversation = (item) => {
-  const { channel_id, channel_type, unread, timestamp, recents, stick, extra } =
-    item;
-  const conversation = new Conversation();
-  conversation.channel = new Channel(channel_id, channel_type);
-  conversation.unread = unread || 0;
-  conversation.timestamp = timestamp || 0;
 
-  if (recents && recents.length > 0) {
-    const messageModel = toMessage(recents[0]);
-    conversation.lastMessage = messageModel;
-  }
-  conversation.extra = {};
-  conversation.extra.top = stick;
-  if (extra) {
-    conversation.remoteExtra = toConversationExtra(conversation.channel, extra);
-  }
+export class Convert {
+    static toConversation(conversationMap) {
+        const conversation = new Conversation()
+        conversation.channel = new Channel(conversationMap['channel_id'], conversationMap['channel_type'])
+        conversation.unread = conversationMap['unread'] || 0;
+        conversation.timestamp = conversationMap['timestamp'] || 0;
 
-  return conversation;
-};
+        let recents = conversationMap["recents"];
+        if (recents && recents.length > 0) {
+            const messageModel = this.toMessage(recents[0]);
+            conversation.lastMessage = messageModel
+        }
+        conversation.extra = {}
+        conversation.extra.top = conversationMap["stick"]
+        if(conversationMap["extra"]) {
+            conversation.remoteExtra = this.toConversationExtra(conversation.channel,conversationMap["extra"])
+        }
 
-export const toReminder = (reminderMap) => {
-  const {
-    channel_id,
-    channel_type,
-    message_id,
-    message_seq,
-    id,
-    reminder_type,
-    text,
-    data,
-    is_locate,
-    version,
-    done,
-  } = item;
-  const reminder = new Reminder();
-  reminder.channel = new Channel(channel_id, channel_type);
-  reminder.messageID = message_id;
-  reminder.messageSeq = message_seq;
-  reminder.reminderID = id;
-  reminder.reminderType = reminder_type;
-  reminder.text = text;
-  reminder.data = data;
-  reminder.isLocate = is_locate === 1;
-  reminder.version = version;
-  reminder.done = done === 1;
-  return reminder;
-};
+        return conversation
+    }
 
-export const toConversationExtra = (channel, item) => {
-  const { browse_to, keep_message_seq, keep_offset_y, draft, version } = item;
-  const conversationExtra = new ConversationExtra();
-  conversationExtra.channel = channel;
-  conversationExtra.browseTo = browse_to;
-  conversationExtra.keepMessageSeq = keep_message_seq;
-  conversationExtra.keepOffsetY = keep_offset_y;
-  conversationExtra.draft = draft || '';
-  conversationExtra.version = version;
-  return conversationExtra;
-};
+    static toReminder(reminderMap) {
+        const reminder = new Reminder()
+        reminder.channel =  new Channel(reminderMap['channel_id'], reminderMap['channel_type'])
+        reminder.messageID = reminderMap["message_id"]
+        reminder.messageSeq = reminderMap["message_seq"]
+        reminder.reminderID = reminderMap["id"]
+        reminder.reminderType = reminderMap["reminder_type"]
+        reminder.text = reminderMap["text"]
+        reminder.data = reminderMap["data"]
+        reminder.isLocate = reminderMap["is_locate"] === 1
+        reminder.version = reminderMap["version"]
+        reminder.done = reminderMap["done"] === 1
+        return reminder
+    }
 
-export const toMessage = (item) => {
-  const {
-    message_idstr,
-    message_id,
-    header,
-    setting,
-    revoke,
-    message_extra,
-    client_seq,
-    channel_id,
-    channel_type,
-    message_seq,
-    client_msg_no,
-    from_uid,
-    timestamp,
-    payload: $payload,
-    is_deleted,
-  } = item;
-  const payload =
-    typeof $payload === 'string'
-      ? JSON.parse(Buffer.from($payload, 'base64').toString('utf-8'))
-      : $payload;
-  const message = new Message();
-  if (message_idstr) {
-    message.messageID = message_idstr;
-  } else {
-    message.messageID = new BigNumber(message_id).toString();
-  }
-  if (header) {
-    message.header.reddot = header.red_dot === 1 ? true : false;
-  }
-  if (setting) {
-    message.setting = Setting.fromUint8(setting);
-  }
-  if (revoke) {
-    message.remoteExtra.revoke = revoke === 1 ? true : false;
-  }
-  if (message_extra) {
-    const messageExtra = message_extra;
-    message.remoteExtra = toMessageExtra(messageExtra);
-  }
+    static toConversationExtra(channel,conversationExtraMap) {
+        const conversationExtra = new ConversationExtra()
+        conversationExtra.channel = channel
+        conversationExtra.browseTo = conversationExtraMap["browse_to"]
+        conversationExtra.keepMessageSeq = conversationExtraMap["keep_message_seq"]
+        conversationExtra.keepOffsetY = conversationExtraMap["keep_offset_y"]
+        conversationExtra.draft = conversationExtraMap["draft"]||""
+        conversationExtra.version = conversationExtraMap["version"] 
+        return conversationExtra
+    }
 
-  message.clientSeq = client_seq;
-  message.channel = new Channel(channel_id, channel_type);
-  message.messageSeq = message_seq;
-  message.clientMsgNo = client_msg_no;
-  message.fromUID = from_uid;
-  message.timestamp = timestamp;
-  message.status = MessageStatus.Normal;
-  const contentObj = payload;
-  let contentType = 0;
-  if (contentObj) {
-    contentType = contentObj.type;
-  }
-  const messageContent = WKSDK.shared().getMessageContent(contentType);
-  if (contentObj) {
-    messageContent.decode(stringToUint8Array(JSON.stringify(contentObj)));
-  }
+    static toMessage(msgMap) {
+        const message = new Message();
+        if (msgMap['message_idstr']) {
+            message.messageID = msgMap['message_idstr'];
+        } else {
+            message.messageID = new BigNumber(msgMap['message_id']).toString();
+        }
+        if (msgMap["header"]) {
+            message.header.reddot = msgMap["header"]["red_dot"] === 1 ? true : false
+        }
+        if (msgMap["setting"]) {
+            message.setting = Setting.fromUint8(msgMap["setting"])
+        }
+        if (msgMap["revoke"]) {
+            message.remoteExtra.revoke = msgMap["revoke"] === 1 ? true : false
+        }
+        if(msgMap["message_extra"]) {
+            const messageExtra = msgMap["message_extra"]
+           message.remoteExtra = this.toMessageExtra(messageExtra)
+        }
+        
+        message.clientSeq = msgMap["client_seq"]
+        message.channel = new Channel(msgMap['channel_id'], msgMap['channel_type']);
+        message.messageSeq = msgMap["message_seq"]
+        message.clientMsgNo = msgMap["client_msg_no"]
+        message.fromUID = msgMap["from_uid"]
+        message.timestamp = msgMap["timestamp"]
+        message.status = MessageStatus.Normal
+        // let contentType = 0
+        // if (contentObj) {
+        //     contentType = contentObj.type
+        // }
+        // const messageContent = WKSDK.shared().getMessageContent(contentType)
+        // console.log(messageContent, '----------------');
+        // if (contentObj) {
+        //     messageContent.decode(this.stringToUint8Array(JSON.stringify(contentObj)))
+        // }
+        // message.content = messageContent
+        const content = JSON.parse(Buffer.from(msgMap["payload"], 'base64').toString('utf-8'));
+        message.content = content;
 
-  message.content = messageContent;
+        message.isDeleted = msgMap["is_deleted"] === 1
+        return message
+    }
 
-  message.isDeleted = is_deleted === 1;
-  return message;
-};
+    static toMessageExtra(msgExtraMap) {
+        const messageExtra = new MessageExtra()
+        if (msgExtraMap['message_id_str']) {
+            messageExtra.messageID = msgExtraMap['message_id_str'];
+        } else {
+            messageExtra.messageID = new BigNumber(msgExtraMap['message_id']).toString();
+        }
+        messageExtra.messageSeq = msgExtraMap["message_seq"]
+        messageExtra.readed = msgExtraMap["readed"] === 1
+        if(msgExtraMap["readed_at"] && msgExtraMap["readed_at"]>0) {
+            messageExtra.readedAt = new Date(msgExtraMap["readed_at"] )
+        }
+        messageExtra.revoke = msgExtraMap["revoke"] === 1
+        if(msgExtraMap["revoker"]) {
+            messageExtra.revoker = msgExtraMap["revoker"]
+        }
+        messageExtra.readedCount = msgExtraMap["readed_count"] || 0
+        messageExtra.unreadCount = msgExtraMap["unread_count"] || 0
+        messageExtra.extraVersion = msgExtraMap["extra_version"] || 0
+        messageExtra.editedAt = msgExtraMap["edited_at"] || 0
 
-export const toMessageExtra = (item) => {
-  const {
-    message_id_str,
-    message_id,
-    message_seq,
-    readed,
-    readed_at,
-    revoke,
-    readed_count,
-    unread_count,
-    extra_version,
-    edited_at,
-    content_edit,
-  } = item;
-  const messageExtra = new MessageExtra();
-  if (message_id_str) {
-    messageExtra.messageID = message_id_str;
-  } else {
-    messageExtra.messageID = new BigNumber(message_id).toString();
-  }
-  messageExtra.messageSeq = message_seq;
-  messageExtra.readed = readed === 1;
-  if (readed_at && readed_at > 0) {
-    messageExtra.readedAt = new Date(readed_at);
-  }
-  messageExtra.revoke = revoke === 1;
-  if (revoker) {
-    messageExtra.revoker = revoker;
-  }
-  messageExtra.readedCount = readed_count || 0;
-  messageExtra.unreadCount = unread_count || 0;
-  messageExtra.extraVersion = extra_version || 0;
-  messageExtra.editedAt = edited_at || 0;
+        const contentEditObj = msgExtraMap["content_edit"]
+        if(contentEditObj) {
+            const contentEditContentType = contentEditObj.type
+            const contentEditContent = WKSDK.shared().getMessageContent(contentEditContentType)
+            const contentEditPayloadData = this.stringToUint8Array(JSON.stringify(contentEditObj))
+            contentEditContent.decode(contentEditPayloadData)
+            messageExtra.contentEditData = contentEditPayloadData
+            messageExtra.contentEdit = contentEditContent
 
-  const contentEditObj = content_edit;
-  if (contentEditObj) {
-    const contentEditContentType = contentEditObj.type;
-    const contentEditContent = WKSDK.shared().getMessageContent(
-      contentEditContentType
-    );
-    const contentEditPayloadData = stringToUint8Array(
-      JSON.stringify(contentEditObj)
-    );
-    contentEditContent.decode(contentEditPayloadData);
-    messageExtra.contentEditData = contentEditPayloadData;
-    messageExtra.contentEdit = contentEditContent;
+            messageExtra.isEdit = true
+        }
 
-    messageExtra.isEdit = true;
-  }
+        return messageExtra
+    }
+   
 
-  return messageExtra;
-};
+    static userToChannelInfo(data) {
+        let channelInfo = new ChannelInfo()
+        channelInfo.channel = new Channel(data.uid, ChannelTypePerson);
+        channelInfo.title = data.name;
+        channelInfo.mute = data.mute === 1;
+        channelInfo.top = data.top === 1;
+        channelInfo.online = data.online === 1;
+        channelInfo.lastOffline = data.last_offline
 
-export const userToChannelInfo = (data) => {
-  const {
-    uid,
-    name,
-    mute,
-    top,
-    online,
-    last_offline,
-    extra,
-    remark,
-    short_no,
-    logo,
-    category,
-  } = data;
-  let channelInfo = new ChannelInfo();
-  channelInfo.channel = new Channel(uid, ChannelTypePerson);
-  channelInfo.title = name;
-  channelInfo.mute = mute === 1;
-  channelInfo.top = top === 1;
-  channelInfo.online = online === 1;
-  channelInfo.lastOffline = last_offline;
+        channelInfo.orgData = data.extra || {};
+        channelInfo.orgData = { ...channelInfo.orgData, ...data }
+        channelInfo.orgData.remark = data.remark ?? "";
+        channelInfo.orgData.displayName = data.remark && data.remark !== "" ? data.remark : channelInfo.title;
+        channelInfo.orgData.shortNo = data.short_no ?? ""
 
-  channelInfo.orgData = extra || {};
-  channelInfo.orgData = { ...channelInfo.orgData, ...data };
-  channelInfo.orgData.remark = remark ?? '';
-  channelInfo.orgData.displayName =
-    remark && remark !== '' ? remark : channelInfo.title;
-  channelInfo.orgData.shortNo = short_no ?? '';
+        channelInfo.logo = data.logo
+        if (!channelInfo.logo || channelInfo.logo === "") {
+            channelInfo.logo = `users/${data.uid}/avatar`
+        }
 
-  channelInfo.logo = logo;
-  if (!channelInfo.logo || channelInfo.logo === '') {
-    channelInfo.logo = `users/${uid}/avatar`;
-  }
+        if (data.category === "system" || data.category === "customerService") { // 官方账号
+            channelInfo.orgData.identityIcon = "./identity_icon/official.png"
+            channelInfo.orgData.identitySize = { width: "18px", height: "18px" }
+        } else if (data.category === "visitor") {
+            channelInfo.orgData.identityIcon = "./identity_icon/visitor.png"
+            channelInfo.orgData.identitySize = { width: "48px", height: "24px" }
+        }
 
-  if (category === 'system' || category === 'customerService') {
-    // 官方账号
-    channelInfo.orgData.identityIcon = './identity_icon/official.png';
-    channelInfo.orgData.identitySize = { width: '18px', height: '18px' };
-  } else if (category === 'visitor') {
-    channelInfo.orgData.identityIcon = './identity_icon/visitor.png';
-    channelInfo.orgData.identitySize = { width: '48px', height: '24px' };
-  }
+        return channelInfo
+    }
 
-  return channelInfo;
-};
+    static groupToChannelInfo(data) {
+        let channelInfo = new ChannelInfo()
+        channelInfo.channel = new Channel(data.group_no, ChannelTypeGroup);
+        channelInfo.title = data.name;
+        channelInfo.mute = data.mute === 1;
+        channelInfo.top = data.top === 1;
+        channelInfo.online = data.online === 1;
+        channelInfo.lastOffline = data.last_offline
 
-export const groupToChannelInfo = (data) => {
-  const {
-    group_no,
-    name,
-    mute,
-    top,
-    online,
-    last_offline,
-    extra,
-    remark,
-    forbidden,
-    invite,
-    forbidden_add_friend,
-    save,
-    logo,
-  } = data;
-  let channelInfo = new ChannelInfo();
-  channelInfo.channel = new Channel(group_no, ChannelTypeGroup);
-  channelInfo.title = name;
-  channelInfo.mute = mute === 1;
-  channelInfo.top = top === 1;
-  channelInfo.online = online === 1;
-  channelInfo.lastOffline = last_offline;
+        channelInfo.orgData = data.extra || {};
+        channelInfo.orgData = { ...channelInfo.orgData, ...data }
+        channelInfo.orgData.remark = data.remark ?? "";
+        channelInfo.orgData.displayName = data.remark && data.remark !== "" ? data.remark : channelInfo.title;
+        channelInfo.orgData.forbidden = data.forbidden;
+        channelInfo.orgData.invite = data.invite;
+        channelInfo.orgData.forbiddenAddFriend = data.forbidden_add_friend;
+        channelInfo.orgData.save = data.save;
 
-  channelInfo.orgData = extra || {};
-  channelInfo.orgData = { ...channelInfo.orgData, ...data };
-  channelInfo.orgData.remark = remark ?? '';
-  channelInfo.orgData.displayName =
-    remark && remark !== '' ? remark : channelInfo.title;
-  channelInfo.orgData.forbidden = forbidden;
-  channelInfo.orgData.invite = invite;
-  channelInfo.orgData.forbiddenAddFriend = forbidden_add_friend;
-  channelInfo.orgData.save = save;
+        channelInfo.logo = data.logo
+        if (!channelInfo.logo || channelInfo.logo === "") {
+            channelInfo.logo = `groups/${data.group_no}/avatar`
+        }
+        return channelInfo
+    }
 
-  channelInfo.logo = logo;
-  if (!channelInfo.logo || channelInfo.logo === '') {
-    channelInfo.logo = `groups/${group_no}/avatar`;
-  }
-  return channelInfo;
-};
-
-export const stringToUint8Array = (str) => {
-  const newStr = unescape(encodeURIComponent(str));
-  var arr = [];
-  for (var i = 0, j = newStr.length; i < j; ++i) {
-    arr.push(newStr.charCodeAt(i));
-  }
-  var tmpUint8Array = new Uint8Array(arr);
-  return tmpUint8Array;
-};
+    static stringToUint8Array(str) {
+        const newStr = unescape(encodeURIComponent(str))
+        var arr = [];
+        for (var i = 0, j = newStr.length; i < j; ++i) {
+            arr.push(newStr.charCodeAt(i));
+        }
+        var tmpUint8Array = new Uint8Array(arr);
+        return tmpUint8Array
+    }
+}
