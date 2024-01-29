@@ -172,6 +172,7 @@ export default function Chat(props) {
         onSend={(messages) => onSend(messages)}
         user={{
           _id: user.uid,
+          avatar: `https://av.silon.cc/${user.uid}`,
         }}
         placeholder='请输入内容'
         locale='zh-cn'

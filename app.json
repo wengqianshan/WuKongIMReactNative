@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.wengqianshan.wukong",
-      "buildNumber": "28"
+      "buildNumber": "29"
     },
     "android": {
       "adaptiveIcon": {

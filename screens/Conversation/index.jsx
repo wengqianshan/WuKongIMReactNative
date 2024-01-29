@@ -22,6 +22,7 @@ import { useChat } from '../../providers/Chat';
 import { conversationDelete, conversationSync } from '../../scripts/api';
 import { useAuth } from '../../providers/Auth';
 import Button from '../../components/Button';
+import { Image } from 'expo-image';
 
 const Conversation = ({ navigation }) => {
   const { theme } = useTheme();
@@ -261,70 +262,82 @@ const Conversation = ({ navigation }) => {
                   backgroundColor: theme.color.container,
                 }}
                 content={
-                  <View
-                    style={{
-                      flex: 1,
-                      paddingVertical: 12,
-                      paddingRight: 16,
-                    }}
-                  >
+                  <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
+                    <Image
+                      source={{
+                        uri: `https://av.silon.cc/${item.channelId}`,
+                      }}
+                      style={{ width: 60, height: 60 }}
+                    />
+
                     <View
                       style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        position: 'relative',
+                        flex: 1,
+                        paddingVertical: 12,
+                        paddingRight: 16,
                       }}
                     >
-                      {item.unread > 0 && (
-                        <View
-                          style={{
-                            backgroundColor: theme.color.error,
-                            position: 'absolute',
-                            right: 0,
-                            bottom: -20,
-                            borderRadius: 20,
-                            paddingHorizontal: 8,
-                            paddingVertical: 2,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: theme.color.on_error,
-                              fontSize: 12,
-                            }}
-                          >
-                            {item.unread}
-                          </Text>
-                        </View>
-                      )}
-
-                      <Text
+                      <View
                         style={{
-                          fontSize: 16,
-                          fontWeight: '500',
-                          color: theme.color.text,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          position: 'relative',
                         }}
                       >
-                        {`${item.title}${isGroup ? '(群聊)' : ''}`}
-                      </Text>
-                      <Text style={{ color: theme.color.text_light }}>
-                        {time}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <Text
-                        numberOfLines={1}
-                        style={{ marginTop: 4, color: theme.color.text_light }}
+                        {item.unread > 0 && (
+                          <View
+                            style={{
+                              backgroundColor: theme.color.error,
+                              position: 'absolute',
+                              right: 0,
+                              bottom: -20,
+                              borderRadius: 20,
+                              paddingHorizontal: 8,
+                              paddingVertical: 2,
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: theme.color.on_error,
+                                fontSize: 12,
+                              }}
+                            >
+                              {item.unread}
+                            </Text>
+                          </View>
+                        )}
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            fontWeight: '500',
+                            color: theme.color.text,
+                            flex: 1,
+                          }}
+                        >
+                          {`${item.title}${isGroup ? '(群聊)' : ''}`}
+                        </Text>
+                        <Text style={{ color: theme.color.text_light }}>
+                          {time}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          alignItems: 'center',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}
                       >
-                        {isGroup ? `${recent.uid}: ` : ''}
-                        {recent.text}
-                      </Text>
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            marginTop: 4,
+                            color: theme.color.text_light,
+                          }}
+                        >
+                          {isGroup ? `${recent.uid}: ` : ''}
+                          {recent.text}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 }
