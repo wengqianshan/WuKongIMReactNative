@@ -23,6 +23,7 @@ import { conversationDelete, conversationSync } from '../../scripts/api';
 import { useAuth } from '../../providers/Auth';
 import Button from '../../components/Button';
 import { Image } from 'expo-image';
+import { ConnectStatus } from 'wukongimjssdk';
 
 const Conversation = ({ navigation }) => {
   const { theme } = useTheme();
@@ -46,11 +47,20 @@ const Conversation = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    const text =
+      !status || status === ConnectStatus.Connecting
+        ? '正在连接'
+        : status === ConnectStatus.Disconnect
+        ? '断开连接'
+        : status === ConnectStatus.Connected
+        ? ''
+        : '连接失败';
+    const info = text && ` (${text})`;
     navigation.setOptions({
-      title: '悟空IM',
+      title: `悟空IM${info}`,
     });
     return () => {};
-  }, [theme]);
+  }, [theme, status]);
 
   const handlePress = (item) => {
     const { channelId, channelType } = item;
