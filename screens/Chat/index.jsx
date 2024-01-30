@@ -80,7 +80,7 @@ export default function Chat(props) {
       const { messageID, content, timestamp, fromUID } = message;
       return {
         _id: messageID,
-        text: content.content || content.text,
+        text: content.text,
         createdAt: new Date(timestamp * 1000),
         user: {
           _id: fromUID,

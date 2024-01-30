@@ -95,7 +95,7 @@ const Conversation = ({ navigation }) => {
         channelType: channelType,
         recent: {
           uid: fromUID,
-          text: content?.content,
+          text: content?.text,
         },
       };
     });

@@ -79,18 +79,26 @@ export class Convert {
         message.fromUID = msgMap["from_uid"]
         message.timestamp = msgMap["timestamp"]
         message.status = MessageStatus.Normal
-        // let contentType = 0
-        // if (contentObj) {
-        //     contentType = contentObj.type
-        // }
-        // const messageContent = WKSDK.shared().getMessageContent(contentType)
-        // console.log(messageContent, '----------------');
-        // if (contentObj) {
-        //     messageContent.decode(this.stringToUint8Array(JSON.stringify(contentObj)))
-        // }
-        // message.content = messageContent
-        const content = JSON.parse(Buffer.from(msgMap["payload"], 'base64').toString('utf-8'));
-        message.content = content;
+        
+        
+        let payload = msgMap["payload"];
+
+        // 兼容 base64 数据
+        if (typeof payload === 'string') {
+            payload = JSON.parse(Buffer.from(payload, 'base64').toString('utf-8'));
+        }
+        // end
+
+        let contentType = 0
+        if (payload) {
+            contentType = payload.type
+        }
+
+        const messageContent = WKSDK.shared().getMessageContent(contentType)
+        if (payload) {
+            messageContent.decode(this.stringToUint8Array(JSON.stringify(payload)))
+        }
+        message.content = messageContent
 
         message.isDeleted = msgMap["is_deleted"] === 1
         return message
