@@ -6,6 +6,7 @@ import {
   Platform,
   Pressable,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import {
   Composer,
@@ -26,6 +27,7 @@ import { useChat } from '../../providers/Chat';
 import { conversationUnread, getChannelMessages } from '../../scripts/api';
 import { useAuth } from '../../providers/Auth';
 import { goBack } from '../../scripts/RootNavigation';
+import { Image } from 'expo-image';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -41,6 +43,7 @@ export default function Chat(props) {
   const { theme } = useTheme();
 
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
@@ -70,11 +73,13 @@ export default function Chat(props) {
     //   channel_id: channelId,
     //   channel_type: channelType,
     // });
+    setLoading(true);
     const res = await sdk.shared().chatManager.syncMessages({
       channelId,
       channelType,
       user,
     });
+    setLoading(false);
     // console.log('获取频道消息', JSON.stringify(res));
     const data = res.messages?.map((message) => {
       const { messageID, content, timestamp, fromUID } = message;
@@ -85,6 +90,7 @@ export default function Chat(props) {
         user: {
           _id: fromUID,
           name: fromUID,
+          avatar: `https://av.silon.cc/${fromUID}`,
         },
       };
     });
@@ -108,6 +114,7 @@ export default function Chat(props) {
       user: {
         _id: message.fromUID,
         name: message.fromUID,
+        avatar: `https://av.silon.cc/${message.fromUID}`,
       },
     };
     setMessages((previousMessages) =>
@@ -166,6 +173,23 @@ export default function Chat(props) {
 
   return (
     <Page style={styles.container}>
+      {loading && (
+        <View
+          style={{
+            position: 'absolute',
+            zIndex: 2,
+            top: 4,
+            left: '50%',
+            width: 80,
+            padding: 4,
+            borderRadius: 16,
+            backgroundColor: theme.color.container_a25,
+            transform: [{ translateX: -50 }],
+          }}
+        >
+          <ActivityIndicator size={'small'} color={'#fff'} />
+        </View>
+      )}
       <GiftedChat
         messageContainerRef={$ref}
         messages={messages}
@@ -238,6 +262,14 @@ export default function Chat(props) {
               textStyle={{
                 color: theme.color.primary,
               }}
+            />
+          );
+        }}
+        renderAvatar={({ user }) => {
+          return (
+            <Image
+              source={{ uri: user.avatar }}
+              style={{ width: 36, height: 36 }}
             />
           );
         }}
