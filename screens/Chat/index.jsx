@@ -27,7 +27,7 @@ import { useChat } from '../../providers/Chat';
 import { conversationUnread, getChannelMessages } from '../../scripts/api';
 import { useAuth } from '../../providers/Auth';
 import { goBack } from '../../scripts/RootNavigation';
-import { Image } from 'expo-image';
+import { Image, ImageBackground } from 'expo-image';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -172,114 +172,126 @@ export default function Chat(props) {
   }, []);
 
   return (
-    <Page style={styles.container}>
-      {loading && (
+    <Page
+      style={[
+        styles.container,
+        {
+          backgroundColor: '#1e3d58',
+        },
+      ]}
+    >
+      <ImageBackground
+        source={require('../../assets/bg.svg')}
+        style={{ flex: 1, color: '#fff' }}
+      >
+        {loading && (
+          <View
+            style={{
+              position: 'absolute',
+              zIndex: 2,
+              top: 4,
+              left: '50%',
+              width: 80,
+              padding: 4,
+              borderRadius: 16,
+              backgroundColor: theme.color.container_a25,
+              transform: [{ translateX: -50 }],
+            }}
+          >
+            <ActivityIndicator size={'small'} color={'#fff'} />
+          </View>
+        )}
+        <GiftedChat
+          messageContainerRef={$ref}
+          messages={messages}
+          onSend={(messages) => onSend(messages)}
+          user={{
+            _id: user.uid,
+            avatar: `https://av.silon.cc/${user.uid}`,
+          }}
+          placeholder='请输入内容'
+          locale='zh-cn'
+          timeFormat='HH:mm'
+          dateFormat='MM月DD日'
+          renderUsernameOnMessage={true}
+          scrollToBottom={true}
+          scrollToBottomComponent={() => {
+            return (
+              <Ionicons
+                name='chevron-down-outline'
+                size={20}
+                color={theme.color.text}
+              />
+            );
+          }}
+          scrollToBottomStyle={{
+            backgroundColor: theme.color.container_a25,
+          }}
+          minComposerHeight={40}
+          renderInputToolbar={(props) => {
+            return (
+              <InputToolbar
+                {...props}
+                containerStyle={{
+                  backgroundColor: theme.color.container,
+                  paddingRight: 10,
+                  alignItems: 'center',
+                  borderTopColor: theme.color.container_a75,
+                  flexDirection: 'column',
+                }}
+              />
+            );
+          }}
+          renderComposer={(props) => {
+            return (
+              <Composer
+                {...props}
+                textInputProps={{
+                  selectionColor: theme.color.text,
+                }}
+                textInputStyle={{
+                  flex: 1,
+                  backgroundColor: theme.color.background,
+                  color: theme.color.text,
+                  fontSize: 16,
+                  fontWeight: '500',
+                  lineHeight: 20,
+                  paddingHorizontal: 8,
+                  paddingTop: 10,
+                  paddingBottom: 10,
+                  verticalAlign: 'middle',
+                  borderRadius: 6,
+                }}
+              />
+            );
+          }}
+          renderSend={(props) => {
+            return (
+              <Send
+                {...props}
+                label='发送'
+                textStyle={{
+                  color: theme.color.primary,
+                }}
+              />
+            );
+          }}
+          renderAvatar={({ user }) => {
+            return (
+              <Image
+                source={{ uri: user.avatar }}
+                style={{ width: 36, height: 36 }}
+              />
+            );
+          }}
+        />
         <View
           style={{
-            position: 'absolute',
-            zIndex: 2,
-            top: 4,
-            left: '50%',
-            width: 80,
-            padding: 4,
-            borderRadius: 16,
-            backgroundColor: theme.color.container_a25,
-            transform: [{ translateX: -50 }],
+            height: insets.bottom,
+            backgroundColor: theme.color.container,
           }}
-        >
-          <ActivityIndicator size={'small'} color={'#fff'} />
-        </View>
-      )}
-      <GiftedChat
-        messageContainerRef={$ref}
-        messages={messages}
-        onSend={(messages) => onSend(messages)}
-        user={{
-          _id: user.uid,
-          avatar: `https://av.silon.cc/${user.uid}`,
-        }}
-        placeholder='请输入内容'
-        locale='zh-cn'
-        timeFormat='HH:mm'
-        dateFormat='MM月DD日'
-        renderUsernameOnMessage={true}
-        scrollToBottom={true}
-        scrollToBottomComponent={() => {
-          return (
-            <Ionicons
-              name='chevron-down-outline'
-              size={20}
-              color={theme.color.text}
-            />
-          );
-        }}
-        scrollToBottomStyle={{
-          backgroundColor: theme.color.container_a25,
-        }}
-        minComposerHeight={40}
-        renderInputToolbar={(props) => {
-          return (
-            <InputToolbar
-              {...props}
-              containerStyle={{
-                backgroundColor: theme.color.container,
-                paddingRight: 10,
-                alignItems: 'center',
-                borderTopColor: theme.color.container_a75,
-                flexDirection: 'column',
-              }}
-            />
-          );
-        }}
-        renderComposer={(props) => {
-          return (
-            <Composer
-              {...props}
-              textInputProps={{
-                selectionColor: theme.color.text,
-              }}
-              textInputStyle={{
-                flex: 1,
-                backgroundColor: theme.color.background,
-                color: theme.color.text,
-                fontSize: 16,
-                fontWeight: '500',
-                lineHeight: 20,
-                paddingHorizontal: 8,
-                paddingTop: 10,
-                paddingBottom: 10,
-                verticalAlign: 'middle',
-                borderRadius: 6,
-              }}
-            />
-          );
-        }}
-        renderSend={(props) => {
-          return (
-            <Send
-              {...props}
-              label='发送'
-              textStyle={{
-                color: theme.color.primary,
-              }}
-            />
-          );
-        }}
-        renderAvatar={({ user }) => {
-          return (
-            <Image
-              source={{ uri: user.avatar }}
-              style={{ width: 36, height: 36 }}
-            />
-          );
-        }}
-      />
-      <View
-        style={{
-          height: insets.bottom,
-          backgroundColor: theme.color.container,
-        }}
-      />
+        />
+      </ImageBackground>
     </Page>
   );
 }
