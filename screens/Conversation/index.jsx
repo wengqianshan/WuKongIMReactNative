@@ -105,7 +105,7 @@ const Conversation = ({ navigation }) => {
         channelType: channelType,
         recent: {
           uid: fromUID,
-          text: content?.text,
+          text: content?.text?.replace(/\s/g, ''),
         },
       };
     });
@@ -167,7 +167,7 @@ const Conversation = ({ navigation }) => {
             timestamp,
             recent: {
               uid: fromUID,
-              text: content.text,
+              text: content?.text?.replace(/\s/g, ''),
             },
             unread: $unread,
           },

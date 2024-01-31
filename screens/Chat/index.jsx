@@ -276,10 +276,11 @@ export default function Chat(props) {
               />
             );
           }}
-          renderAvatar={({ user }) => {
+          renderAvatar={(props) => {
+            const { currentMessage } = props;
             return (
               <Image
-                source={{ uri: user.avatar }}
+                source={{ uri: currentMessage.user.avatar }}
                 style={{ width: 36, height: 36 }}
               />
             );
