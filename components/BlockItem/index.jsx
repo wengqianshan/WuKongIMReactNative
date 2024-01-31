@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { isValidElement, useState } from 'react';
 import { View, StyleSheet, Pressable, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -28,7 +28,7 @@ const BlockItem = (props) => {
     vertical = false, // title和内容垂直布局
   } = props;
 
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   const [pressed, setPressed] = useState(false);
 
   const pressIn = () => {
@@ -72,6 +72,29 @@ const BlockItem = (props) => {
     ? theme.color.container_a50
     : theme.color.container;
 
+  let $icon = null;
+  if (isValidElement(icon)) {
+    $icon = icon;
+  } else if (typeof icon === 'string') {
+    $icon = (
+      <Pressable
+        style={[
+          styles.iconContainer,
+          vAlign === 'top' && styles.iconContainerTop,
+        ]}
+        onPress={onIconPress}
+        pointerEvents={onIconPress ? 'auto' : 'none'}
+      >
+        <Ionicons
+          name={icon}
+          size={24}
+          style={[styles.icon]}
+          color={iconColor || theme.color.primary}
+        />
+      </Pressable>
+    );
+  }
+
   return (
     <Pressable
       style={[
@@ -85,25 +108,14 @@ const BlockItem = (props) => {
       onPressOut={pressOut}
       onPress={onPress}
     >
-      {icon && (
-        <Pressable
-          style={[
-            styles.iconContainer,
-            vAlign === 'top' && styles.iconContainerTop,
-          ]}
-          onPress={onIconPress}
-          pointerEvents={onIconPress ? 'auto' : 'none'}
-        >
-          <Ionicons
-            name={icon}
-            size={24}
-            style={[styles.icon]}
-            color={iconColor || theme.color.primary}
-          />
-        </Pressable>
-      )}
+      {$icon}
       <View
-        style={[styles.body, borderStyle, vAlign === 'top' && styles.bodyTop, vertical && styles.bodyVertical]}
+        style={[
+          styles.body,
+          borderStyle,
+          vAlign === 'top' && styles.bodyTop,
+          vertical && styles.bodyVertical,
+        ]}
       >
         {title && (
           <View style={styles.title}>
@@ -138,6 +150,7 @@ const BlockItem = (props) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    alignItems: 'center',
     paddingLeft: 16,
   },
   iconContainer: {

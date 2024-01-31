@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {
+  Bubble,
   Composer,
   GiftedChat,
   InputToolbar,
@@ -176,13 +177,14 @@ export default function Chat(props) {
       style={[
         styles.container,
         {
-          backgroundColor: '#1e3d58',
+          // backgroundColor: '#1e3d58',
         },
       ]}
     >
       <ImageBackground
         source={require('../../assets/bg.svg')}
-        style={{ flex: 1, color: '#fff' }}
+        style={{ flex: 1 }}
+        tintColor={theme.color.container_a75}
       >
         {loading && (
           <View
@@ -228,6 +230,29 @@ export default function Chat(props) {
             backgroundColor: theme.color.container_a25,
           }}
           minComposerHeight={40}
+          renderBubble={(props) => {
+            return (
+              <Bubble
+                {...props}
+                textStyle={{
+                  left: {
+                    color: theme.color.on_container,
+                  },
+                }}
+                usernameStyle={{
+                  color: theme.color.text_light,
+                }}
+                wrapperStyle={{
+                  left: {
+                    backgroundColor: theme.color.container,
+                  },
+                  right: {
+                    backgroundColor: theme.color.primary,
+                  },
+                }}
+              />
+            );
+          }}
           renderInputToolbar={(props) => {
             return (
               <InputToolbar

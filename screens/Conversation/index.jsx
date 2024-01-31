@@ -270,16 +270,18 @@ const Conversation = ({ navigation }) => {
                 showArrow={false}
                 style={{
                   backgroundColor: theme.color.container,
+                  paddingLeft: 8,
                 }}
+                icon={
+                  <Image
+                    source={{
+                      uri: `https://av.silon.cc/${item.channelId}`,
+                    }}
+                    style={{ width: 60, height: 60 }}
+                  />
+                }
                 content={
                   <View style={{ flexDirection: 'row', paddingVertical: 4 }}>
-                    <Image
-                      source={{
-                        uri: `https://av.silon.cc/${item.channelId}`,
-                      }}
-                      style={{ width: 60, height: 60 }}
-                    />
-
                     <View
                       style={{
                         flex: 1,
