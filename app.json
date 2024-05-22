@@ -29,7 +29,8 @@
     },
     "scheme": "wukongim",
     "plugins": [
-      "expo-localization"
+      "expo-localization",
+      "expo-secure-store"
     ],
     "extra": {
       "eas": {
