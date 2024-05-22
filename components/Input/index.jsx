@@ -9,7 +9,7 @@ const Input = (props) => {
     $ref,
     label = '邮箱',
     type = 'none',
-    icon = 'ios-mail',
+    icon = 'mail',
     style = {},
     inputProps = {},
     inputStyle = {},

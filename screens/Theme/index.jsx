@@ -69,7 +69,7 @@ const Theme = ({ navigation }) => {
               </Text>
               {active && (
                 <Ionicons
-                  name='ios-checkmark'
+                  name='checkmark'
                   size={32}
                   color={theme.color.on_primary}
                   style={styles.checked}

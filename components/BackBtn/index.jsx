@@ -24,7 +24,7 @@ const BackBtn = (props) => {
       }}
     >
       <Ionicons
-        name={type === 'close' ? 'close' : 'ios-chevron-back'}
+        name={type === 'close' ? 'close' : 'chevron-back'}
         size={28}
         color={theme.color.primary}
       />
