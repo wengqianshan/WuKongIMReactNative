@@ -22,7 +22,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.wengqianshan.wukong",
-      "versionCode": 4
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/favicon.png"
