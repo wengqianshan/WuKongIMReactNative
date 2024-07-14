@@ -18,13 +18,16 @@ const ApiItem = (props) => {
   const [api, setApi] = useState();
   const [params, setParams] = useState();
   const [response, setResponse] = useState();
+  const [loading, setLoading] = useState(false);
 
   const $name = camelCase(name.substring(1).replace(/\//g, '_'));
 
   const send = async () => {
     try {
       const body = params && JSON.parse(params);
+      setLoading(true);
       const res = await api[$name](body);
+      setLoading(false);
       setResponse(JSON.stringify(res, null, 4));
     } catch (error) {
       setResponse(error.message);
@@ -69,6 +72,7 @@ const ApiItem = (props) => {
       </Block>
       <Button
         text='发送'
+        loading={loading}
         style={{
           marginHorizontal: 16,
         }}
