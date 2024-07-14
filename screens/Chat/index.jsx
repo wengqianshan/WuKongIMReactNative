@@ -230,7 +230,7 @@ export default function Chat(props) {
           scrollToBottomStyle={{
             backgroundColor: theme.color.container_a25,
           }}
-          minComposerHeight={40}
+          // minComposerHeight={40}
           renderBubble={(props) => {
             return (
               <Bubble
@@ -311,6 +311,7 @@ export default function Chat(props) {
               />
             );
           }}
+          bottomOffset={insets.bottom}
         />
         <View
           style={{
