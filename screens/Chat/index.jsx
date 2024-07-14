@@ -29,6 +29,7 @@ import { conversationUnread, getChannelMessages } from '../../scripts/api';
 import { useAuth } from '../../providers/Auth';
 import { goBack } from '../../scripts/RootNavigation';
 import { Image, ImageBackground } from 'expo-image';
+import { AVATAR_HOST } from '../../scripts/constant';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -91,7 +92,7 @@ export default function Chat(props) {
         user: {
           _id: fromUID,
           name: fromUID,
-          avatar: `https://av.silon.cc/${fromUID}`,
+          avatar: `${AVATAR_HOST}/${fromUID}`,
         },
       };
     });
@@ -115,7 +116,7 @@ export default function Chat(props) {
       user: {
         _id: message.fromUID,
         name: message.fromUID,
-        avatar: `https://av.silon.cc/${message.fromUID}`,
+        avatar: `${AVATAR_HOST}/${message.fromUID}`,
       },
     };
     setMessages((previousMessages) =>
@@ -209,7 +210,7 @@ export default function Chat(props) {
           onSend={(messages) => onSend(messages)}
           user={{
             _id: user.uid,
-            avatar: `https://av.silon.cc/${user.uid}`,
+            avatar: `${AVATAR_HOST}/${user.uid}`,
           }}
           placeholder='请输入内容'
           locale='zh-cn'

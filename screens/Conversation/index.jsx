@@ -24,6 +24,7 @@ import { useAuth } from '../../providers/Auth';
 import Button from '../../components/Button';
 import { Image } from 'expo-image';
 import { ConnectStatus } from 'wukongimjssdk';
+import { AVATAR_HOST } from '../../scripts/constant';
 
 const Conversation = ({ navigation }) => {
   const { theme } = useTheme();
@@ -275,7 +276,7 @@ const Conversation = ({ navigation }) => {
                 icon={
                   <Image
                     source={{
-                      uri: `https://av.silon.cc/${item.channelId}`,
+                      uri: `${AVATAR_HOST}/${item.channelId}`,
                     }}
                     style={{ width: 60, height: 60 }}
                   />
