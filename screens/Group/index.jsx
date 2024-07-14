@@ -104,7 +104,7 @@ const Group = ({ navigation }) => {
             renderer={Popover}
             rendererProps={{
               anchorStyle: {
-                backgroundColor: theme.color.secondary,
+                backgroundColor: theme.color.container,
               },
               placement: 'bottom',
             }}
@@ -119,7 +119,7 @@ const Group = ({ navigation }) => {
             <MenuOptions
               customStyles={{
                 optionsContainer: {
-                  backgroundColor: theme.color.secondary,
+                  backgroundColor: theme.color.container,
                   padding: 4,
                   borderRadius: 6,
                 },

@@ -14,7 +14,7 @@ import Block from '../../Block';
 
 const ContactAdd = ({ modal: { closeModal, getParam } }) => {
   const cb = getParam('callback', () => {});
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   const { width } = useWindowDimensions();
 
   const [val, setValue] = useState('');
@@ -51,7 +51,7 @@ const ContactAdd = ({ modal: { closeModal, getParam } }) => {
           </Text>
           <View
             style={{
-              marginHorizontal: 16,
+              marginHorizontal: 48,
             }}
           >
             <Input
@@ -76,7 +76,8 @@ const ContactAdd = ({ modal: { closeModal, getParam } }) => {
 
           <View
             style={{
-              margin: 16,
+              marginHorizontal: 48,
+              marginVertical: 24,
             }}
           >
             <Button text='添加' onPress={handleSubmit} />
@@ -88,7 +89,9 @@ const ContactAdd = ({ modal: { closeModal, getParam } }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    paddingHorizontal: 24,
+  },
   title: {
     fontSize: 14,
     textAlign: 'center',
