@@ -32,6 +32,9 @@ const Setting = ({ navigation }) => {
   return (
     <Page scroll>
       <Shim position='header' />
+      <Text>uni {typeof uni}</Text>
+      <Text>wx {typeof wx}</Text>
+      <Text>ws {typeof WebSocket}</Text>
       <UserCard />
       <Block transparent>
         <BlockItem
