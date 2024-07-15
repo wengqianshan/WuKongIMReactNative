@@ -9,6 +9,7 @@
     "web": "expo start --web",
     "build:ios": "eas build -p ios --local",
     "build:android": "eas build -p android --local",
+    "build:android:dev": "eas build -p android -e development --local",
     "build:android:apk": "eas build -p android -e preview --local"
   },
   "dependencies": {
@@ -27,6 +28,7 @@
     "expo-application": "~5.9.1",
     "expo-av": "~14.0.6",
     "expo-blur": "~13.0.2",
+    "expo-dev-client": "~4.0.20",
     "expo-device": "~6.0.2",
     "expo-image": "~1.12.12",
     "expo-linking": "~6.3.1",
