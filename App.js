@@ -1,6 +1,7 @@
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 import { MenuProvider } from 'react-native-popup-menu';
+import { NotifierWrapper } from 'react-native-notifier';
 
 import I18nProvider from './providers/I18n';
 import ThemeProvider from './providers/Theme';
@@ -17,6 +18,7 @@ const providers = [
   SafeAreaProvider,
   I18nProvider,
   ThemeProvider,
+  NotifierWrapper,
   ModalProvider,
   MenuProvider,
   AuthProvider,

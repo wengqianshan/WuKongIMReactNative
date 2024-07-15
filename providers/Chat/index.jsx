@@ -10,6 +10,7 @@ import Empty from '../../components/Empty';
 import { useAuth } from '../Auth';
 import { useSound } from '../Sound';
 import { Convert } from '../../scripts/convert';
+import { toast } from '../../scripts/utils';
 
 const Context = createContext();
 
@@ -34,6 +35,7 @@ const ChatProvider = ({ children }) => {
 
   const connectStatusListener = (status, reasonCode) => {
     console.log('连接状态: ', status);
+    toast(`连接状态: ${status} [${Date.now()}]`);
     if (status === ConnectStatus.Connected) {
       // console.log('连接成功');
     } else {
