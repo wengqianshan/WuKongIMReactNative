@@ -71,7 +71,7 @@ const ChatProvider = ({ children }) => {
     if (!addr?.ws_addr) {
       return setError(`无法连接到服务器: ${host}`);
     }
-    WKSDK.shared().config.addr = addr.ws_addr;
+    WKSDK.shared().config.addr = addr.wss_addr;
     WKSDK.shared().config.uid = uid;
     WKSDK.shared().config.token = token;
     WKSDK.shared().connectManager.connect();
