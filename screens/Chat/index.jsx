@@ -83,7 +83,7 @@ export default function Chat(props) {
     });
     setLoading(false);
     // console.log('获取频道消息', JSON.stringify(res));
-    const data = res.messages?.map((message) => {
+    const data = (res.messages || []).map((message) => {
       const { messageID, content, timestamp, fromUID } = message;
       return {
         _id: messageID,

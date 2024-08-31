@@ -67,11 +67,12 @@ const ChatProvider = ({ children }) => {
       return setError(`uid或token不存在: [${uid}-${token}]`);
     }
     // 自动获取ws地址
-    const addr = await getAddr();
-    if (!addr?.ws_addr) {
+    const route = await getAddr();
+    const addr = route.wss_addr || route.ws_addr;
+    if (!addr) {
       return setError(`无法连接到服务器: ${host}`);
     }
-    WKSDK.shared().config.addr = addr.wss_addr;
+    WKSDK.shared().config.addr = addr;
     WKSDK.shared().config.uid = uid;
     WKSDK.shared().config.token = token;
     WKSDK.shared().connectManager.connect();
@@ -134,7 +135,7 @@ const ChatProvider = ({ children }) => {
         channel_id: channelId,
         channel_type: channelType,
       });
-      res.messages = res.messages.map((item) => {
+      res.messages = res.messages?.map((item) => {
         return Convert.toMessage(item);
       });
       // message.remoteExtra.extra = ...  //一些第三方数据可以放在这里
